@@ -64,7 +64,7 @@ void stopClock(void) {		//http://www.cplusplus.com/reference/ctime/clock/
 double bydloExp(int x) {
 	double exp = 0;
 	if (x >= 0) {
-		for (int k = 0; k <= 170; k++) { //после 170 есть риск переполнить double
+		for (int k = 0; k <= 170; k++) { //после 170 есть риск переполнить double при вычислении факториала 
 			exp += pow(x, (double)k) / factorial(k);
 		}
 	}
