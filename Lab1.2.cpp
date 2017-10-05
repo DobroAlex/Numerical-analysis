@@ -26,8 +26,10 @@ inline void stopClock(void);	//останавливает таймер
 double factorial(int x);
 double bydloExp(double x); //быдло-функция вычисления экспоненты. Делает int_max итераций без учёта сложения машинного эпсилона и etc
 double normExp(double x); //нормальная функция для экспоненты. Основной фишкой является учет машинного эпсилон : если k-ый член итерации <= эпсилон, то прерываем сложение ряда
-double normCos(double x); // с машинным эпсилоном, но без учета переодичности
-double pereodicCos(double x);
+double bydloCos(double x); // с машинным эпсилоном, но без учета переодичности
+double pereodicCos(double x);//учёт переодичности 
+double periodicSin(double x); //синус сразу с учётом переодичности 
+//double norm
 
 int main()
 {
@@ -55,9 +57,9 @@ int main()
 	getchar();
 	for (int x = -50; x <= 50; x++) {
 		cout << "X = " << x;
-		cout << ", normCos(x) = ";
+		cout << ", bydloCos(x) = ";
 		startClock();
-		cout << std::setprecision(40) << normCos(x);
+		cout << std::setprecision(40) << bydloCos(x);
 		stopClock();
 		cout << ", it took " << std::setprecision(40) << wastedTime << " seconds to calculate " << " iter = " << ::iterations<<' ';
 		cout << "cos(x) =  ";
@@ -69,6 +71,20 @@ int main()
 		cout << std::setprecision(40) << pereodicCos(x);
 		stopClock();
 		cout << ", it took " << std::setprecision(40) << wastedTime << " seconds to calculate " << " iter = " << ::iterations << endl << endl;
+	}
+	getchar();
+	for (int x = -50; x <= 50; x++) {
+		cout << "X = " << x;
+		cout << ", pereodicSin(x) = ";
+		startClock();
+		cout << std::setprecision(40) << periodicSin(x);
+		stopClock();
+		cout << ", it took " << std::setprecision(40) << wastedTime << " seconds to calculate " << " iter = " << ::iterations << ' ';
+		cout << "sin(x) =  ";
+		startClock();
+		cout << std::setprecision(40) << sin(x);
+		stopClock();
+		cout << ", it took " << std::setprecision(40) << wastedTime << " seconds to calculate " << endl << endl;
 	}
 	getchar();
     return 0;
@@ -93,7 +109,7 @@ double bydloExp(double x) {
 	}
 	return exp;
 }
- double  factorial(int x) {
+double factorial(int x) {
 	double f = 1;
 	for (int i = 2; i <= x; i++)
 	{
@@ -101,7 +117,7 @@ double bydloExp(double x) {
 	}
 	return (double)f;
 }
- double normExp(double x) {
+double normExp(double x) {
 	 double exp = 0;
 	 double prevStep = 0;
 	 if (x >= 0) {
@@ -115,7 +131,7 @@ double bydloExp(double x) {
 	 }
 	 return exp;
  }
- double normCos(double x) { // >30 начинает сильно отклоняться, две цифры после запятой уже теряются
+double bydloCos(double x) { // >30 начинает сильно отклоняться, две цифры после запятой уже теряются
 	 double ans = 0;
 	 for (int k = 0; ans != ans + (pow(-1.0, (double)k) * pow((double)x, 2.0*(double)k)) / factorial(2.0 * (double)k); k++) {
 		 ans += (double)(pow(-1.0, (double)k) * pow((double)x, 2.0*(double)k)) / factorial(2.0 * (double)k);
@@ -123,7 +139,7 @@ double bydloExp(double x) {
 	 }
 	 return ans;
 }
- double pereodicCos(double x) {
+double pereodicCos(double x) {
 	 while (x >= M_PI * 2.0)
 	 {
 		 x -= M_PI * 2.0;
@@ -135,3 +151,14 @@ double bydloExp(double x) {
 	 }
 	 return ans;
  }
+double periodicSin(double x) {
+	while ( x >= 2.0 * M_PI ) {
+		x -= 2.0 * M_PI;
+	}
+	double ans = 0;
+	for (int k = 0; ans != ans + (pow(-1.0, (double)k) * pow((double)x, (double)(2.0*k + 1))) / factorial((double)(2.0*k + 1)); k++) {
+		ans += (pow(-1.0, (double)k) * pow((double)x, (double)(2.0*k + 1))) / factorial((double)(2.0*k + 1));
+		::iterations = k;
+	}
+	return ans;
+}
