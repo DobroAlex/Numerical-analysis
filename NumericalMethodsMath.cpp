@@ -4,7 +4,7 @@ int iterations; //число итераций в normExp
 clock_t globalT; //глобальная структура времени
 double wastedTime; // глоабльная переменная, указывющая время между вызовами startClock и stopClock;
 
-void NumMet::startClock(void) {		//http://www.cplusplus.com/reference/ctime/clock/
+void  NumMet::startClock(void) {		//http://www.cplusplus.com/reference/ctime/clock/
 	 ::globalT = clock();
 }
 void  NumMet::stopClock(void) {		//http://www.cplusplus.com/reference/ctime/clock/

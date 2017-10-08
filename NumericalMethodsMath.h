@@ -11,6 +11,10 @@
 #define MY_DUB_PI 6.28318530717958623199//Пи*2
 #define MY_REV_E 0.36787944117144233402 // e^-1
 #include "stdafx.h"
+#include <cmath>
+#include <ctime>
+#include <iostream>
+#include <iomanip>
 extern int iterations; //число итераций в normExp
 extern clock_t globalT; //глобальная структура времени
 extern double wastedTime; // глоабльная переменная, указывющая время между вызовами startClock и stopClock;
