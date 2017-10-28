@@ -14,9 +14,12 @@
 #include "NumericalMethodsMath.h"
 #define MY_VAR 7 /*Мой вариант*/
 using namespace std;
-int lenBetweenpoints (int x1, int x2);
-double lagranz(double t, double * X, double *Y, double n  ); //интерполяционный многочлен 
+using NumMet::lagranz;
+using NumMet::lenBetweenpoints;
+/*int lenBetweenpoints (int x1, int x2);
+double lagranz(double t, double * X, double *Y, double n  ); //интерполяционный многочлен */
 double testFunc(double x); /*Функция, которую интерполируем */
+double Chebyshev (int n , double t ) ; //многочлен Чебышева n-ого рода,  -1<=t<=1
 int main(int argc, char** argv) {
     /*Interpolation corectness test*/
     double OX[5] = {-1.0, -.5, .0, .5, 1.0};
@@ -62,7 +65,7 @@ int main(int argc, char** argv) {
     /*f(x) = 1/(1+d*x^2), x [-1;1], d = 10+k;*/
     /*Part (a)*/
     int n[] = {4, 10, 20};
-    for (int j = 0; j < sizeof(n)/sizeof(n[0]); j++) {
+    for (int j = 0; j < (int)(sizeof(n)/sizeof(n[0])); j++) {
         double  * realF = new double [n[j]];
         double * X = new double [n[j]];
         double ansX = -1.;
@@ -84,37 +87,28 @@ int main(int argc, char** argv) {
        delete [] X;
        delete [] realF;
     }
+    /*Чебышев*/
+    cout<<"\n\n\n Чебышев \n\n\n";
+    for (int j = 0; j < 3; j++) {
+        double *realF = new double [n[j]+1];
+        double * X = new double [n[j]+1];
+        for (int i = 0; i <= n[j]; i++) {
+            double N = 2*(n[j]+1);
+            X[i] = cos((2.0*(double)i + 1.0) * M_PI / N);
+            realF[i] = 1./(1.+ (10. + MY_VAR)*X[i]*X[i]);
+        }
+        for (int i = 0; i<=n[j];i ++) {
+            cout << "\n n=" << n[j] <<"\t X =" << X[i] << "\t F(x) = " << realF[i] << "\t Ln(x) = " << NumMet::lagranz(X[i], X, realF, n[j])<<endl;
+        }
+    }
     return 0;
 }
 
-double lagranz(double t, double * X, double *Y, double n  ){
-        double z,p1,p2; 
-        z=0;
-        for (int j=0; j<n; j++){
-                p1=1; p2=1;
-                for (int i=0; i<n; i++){
-                        if (i==j){
-                            p1=p1*1;p2=p2*1;
-                        }
-                        else {
-                                p1=p1*(t-X[i]);
-                                p2=p2*(X[j]-X[i]);
-                    }
-                }
-                z=z+Y[j]*p1/p2;
-        }
-        return z;
-}
 
 
-double testFunc(double x) {
+inline double testFunc(double x) {
 	return  2.0 * x*x*x*x + 3.0 * x*x*x + 4.0*x*x + x + 5.0; // for example
 }
-int lenBetweenpoints (int x1, int x2) {
-    if (x2 >= x1){
-        return abs(x2 - x1);
-    }
-    else {
-        return (abs(x1 - x2));
-    }
+inline double Chebyshev (int n , double t ) { //многочлен Чебышева n-ого рода,  -1<=t<=1
+    return cos ( (double)n * acos(t)); //http://www.intuit.ru/studies/courses/1012/168/lecture/4600?page=5
 }
