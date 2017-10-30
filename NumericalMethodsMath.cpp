@@ -198,3 +198,29 @@ void NumMet::seed(long d) {
     return (double)(((temp = AM * iy) > RNMX ? RNMX : temp));
  
 }
+ int NumMet::lenBetweenpoints (int x1, int x2) {
+    if (x2 >= x1){
+        return abs(x2 - x1);
+    }
+    else {
+        return (abs(x1 - x2));
+    }
+}
+ double NumMet::lagranz(double t, double* X, double* Y, double n) {
+        double z,p1,p2; 
+        z=0;
+        for (int j=0; j<n; j++){
+                p1=1; p2=1;
+                for (int i=0; i<n; i++){
+                        if (i==j){
+                            p1=p1*1;p2=p2*1;
+                        }
+                        else {
+                                p1=p1*(t-X[i]);
+                                p2=p2*(X[j]-X[i]);
+                    }
+                }
+                z=z+Y[j]*p1/p2;
+        }
+        return z;
+ }

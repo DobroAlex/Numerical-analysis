@@ -31,7 +31,8 @@ namespace NumMet {
 	double periodicSin(double x); //синус сразу с учётом переодичности 
         void seed(long d); //семя для double rnd(). Лучше задавать через time(NULL);
         double rnd(); //генератор случайных double чисел
-        
+        int lenBetweenpoints (int x1, int x2); //расстояние между двумя точками на координатной прямой, добавлено для скорости в  2.1
+/*TODO:*/        double lagranz(double t, double * X, double *Y, double n  ); //интерполяциооный многочлен Лагранжа по массиву размера n  в точке t 
+/*Переписать t на x, n на size */
 }
 #endif
-
