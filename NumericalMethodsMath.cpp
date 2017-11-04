@@ -1,4 +1,4 @@
-/*TODO : привести всё к одной кодировке. MVS делает непортабельными комментари со своим  Win-1251*/
+/*TODO : привести всё к одной кодировке Win1251 . MVS делает непортабельными комментари со своим  ISO-8859-1*/
 #include "NumericalMethodsMath.h"
 int iterations; //÷èñëî èòåðàöèé â normExp
 clock_t globalT; //ãëîáàëüíàÿ ñòðóêòóðà âðåìåíè
@@ -224,3 +224,49 @@ void NumMet::seed(long d) {
         }
         return z;
  }
+double NumMet::Newton(double x, int n, double *MasX, double *MasY, double step) { // http://www.cyberforum.ru/cpp-builder/thread1171158.html#post6152356 интреполяция Ньютоном в точке x массивов MasX и MasY длины n с шагом step
+    //  выделяем память под динамический двумерный массив dy 
+        double **dy = new double*[n];
+        for ( int i = 0; i < n; i++ ){
+            dy[i] = new double[n];
+        }    
+        // подсчитываем dy
+
+        for ( int i = 0; i < n; i++ ) {
+                dy[0][i] = MasY[i];
+        }
+
+        for ( int i = 1; i < n; i++ ) {
+                for ( int j = 0; j < n-i; j++ ) {
+                        dy[i][j] = dy[i-1][j+1] - dy[i-1][j];
+                }
+        }
+
+        // вычисляем результирующий y
+
+        double q = (x-MasX[0]) / step; // см. формулу
+
+        double result = MasY[0]; // результат (y)
+
+
+        double mult_q = 1; // произведение из q*(q-1)*(q-2)*(q-n)
+
+        double fact = 1; // факториал
+
+
+        for ( int i = 1; i < n; i++ ) {
+                fact *= i;
+                mult_q *= (q-i+1);
+
+                result += mult_q/fact * dy[i][0];
+        }
+
+        // осводождаем dy
+
+        for ( int i = 0; i < n; i++ ){ 
+            delete[] dy[i];
+        }
+        delete[] dy;
+
+        return result;
+}

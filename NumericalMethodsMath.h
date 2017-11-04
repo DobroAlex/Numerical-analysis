@@ -31,7 +31,16 @@ namespace NumMet {
         void seed(long d); //семя для double rnd(). Лучше задавать через time(NULL);
         double rnd(); //генератор случайных double чисел
         int lenBetweenpoints (int x1, int x2); //расстояние между двумя точками на координатной прямой, добавлено для скорости в  2.1
-/*TODO:*/        double lagranz(double t, double * X, double *Y, double n  ); //интерполяциооный многочлен Лагранжа по массиву размера n  в точке t 
-/*Переписать t на x, n на size */
+/*TODO:Переписать t на x, n на size */        double lagranz(double t, double * X, double *Y, double n  ); //интерполяциооный многочлен Лагранжа по массиву размера n  в точке t 
+
+        double Newton(double x, int n, double *MasX, double *MasY, double step); // http://www.cyberforum.ru/cpp-builder/thread1171158.html#post6152356 интреполяция Ньютоном в точке x массивов MasX и MasY длины n с шагом step
+        template  <class T>  T abs(T a){ //шаблонный модуль,т.к stdlib работает только для int 
+            if (a >= 0) { //предполагается численный тип данных, для котрого определно сравнение с  0
+                return a;
+            }
+            else {
+                return -a;
+            }
+        }
 }
 #endif
