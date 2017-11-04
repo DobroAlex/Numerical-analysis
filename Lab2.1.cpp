@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
             realF[i] = 1./(1. + (10 + MY_VAR)* pow(X[i], 2.));
         }
         for (int  i = 0; i < n[j]; i++) {
-            cout <<"\n n = " << n[j] << "\t X=" << X[i] << "\t F(x) = " << realF[i] << "\t Ln(x) =" << lagranz(X[i], X, realF, n[j]);
+            cout <<"\n n = " << n[j] <<"\t i = " << i << "\t X=" << X[i] << "\t F(x) = " << realF[i] << "\t Ln(x) =" << lagranz(X[i], X, realF, n[j]);
         }
         cout << "\n\n\n";
        delete [] X;
@@ -91,7 +91,7 @@ int main(int argc, char** argv) {
             realF[i] = 1./(1.+ (10. + MY_VAR)*X[i]*X[i]);
         }
         for (int i = 0; i<=n[j];i ++) {
-            cout << "\n n=" << n[j] <<"\t X =" << X[i] << "\t F(x) = " << realF[i] << "\t Ln(x) = " << NumMet::lagranz(X[i], X, realF, n[j])<<endl;
+            cout << "\n n=" << n[j] <<"\t i = " << i<<"\t X =" << X[i] << "\t F(x) = " << realF[i] << "\t Ln(x) = " << NumMet::lagranz(X[i], X, realF, n[j])<<endl;
         }
     }
     return 0;
@@ -100,5 +100,5 @@ int main(int argc, char** argv) {
 
 
 inline double testFunc(double x) {
-	return  2.0 * x*x*x*x + 3.0 * x*x*x + 4.0*x*x + x + 5.0; // for example
+	return  2. * x*x*x*x + 3. * x*x*x + 4.*x*x + x + 5.; // for example
 }
