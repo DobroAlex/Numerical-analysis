@@ -225,6 +225,7 @@ void NumMet::seed(long d) {
         return z;
  }
 double NumMet::Newton(double x, int n, double *MasX, double *MasY, double step) { // http://www.cyberforum.ru/cpp-builder/thread1171158.html#post6152356 интреполяция Ньютоном в точке x массивов MasX и MasY длины n с шагом step
+    //КОНЕЧНЫЕ РАЗНОСТИ
     //  выделяем память под динамический двумерный массив dy 
         double **dy = new double*[n];
         for ( int i = 0; i < n; i++ ){

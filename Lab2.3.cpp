@@ -1,18 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   Lab2.3.cpp
- * Author: GitHub @DobroAlex
- *
- * Created on 4 ноября 2017 г., 15:26
- */
-
 #include "NumericalMethodsMath.h"
 using namespace std;
+using ::NumMet::lagranz;
+using ::NumMet::Newton;
 int main(int argc, char** argv) {
     double OX[5] = {-1., -.5, .0 , .5,1.};
     double OY[5] ;
@@ -24,13 +13,13 @@ int main(int argc, char** argv) {
     }
     cout<<endl;
     for (int i = 0; i < 5; i++) { 
-        OY[i] = exp(OX[i]); //например берем экспоненту e^X[i]
+        OY[i] = OX[i]*OX[i]; //например берем экспоненту x^2
         cout << OY[i] <<"\t";
     }
     cout << endl;
     /*У нас есть N точeк, степень полинома не больше, чем N-1*/
-    for (double test = -2.5; test  <= 2.5; test += .5) {
-        cout << " Test value = " << test << " Ln(x) = " << NumMet::lagranz(test, OX, OY, 5)<<"\t Nn(x) = " << NumMet::Newton(test, 5, OX, OY, .5)<<endl;
+    for (int i = 0; i < 5 ; i++) {
+        cout << "X=" << OX[i] << "\tF(x) = "<<OY[i]<<"\tLn(x) = "<<lagranz(OX[i], OX, OY, 5 )<<"\tNewton(x)="<<Newton(OX[i], 5, OX, OY, OX[1]-OX[0])<<endl;
     }
     getchar();
     int n[2] = {10,20};
