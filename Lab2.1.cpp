@@ -1,16 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   Lab2.1.cpp
- * Author: DobroAlex 
- *
- * Created on 25 октября 2017 г., 13:04
- */
-
 #include "NumericalMethodsMath.h"
 #define MY_VAR 7 /*Мой вариант*/
 using namespace std;
@@ -36,7 +23,7 @@ int main(int argc, char** argv) {
     }
     cout << endl;
     for (double test = .0; test <10; test+= 1.0){
-        cout << "test val = " << test << "; Ln(x) = " << lagranz(test, OX, OY, 5)<<"; F(x) = " << testFunc(test)<<endl;
+        cout << "test val = " << test <<"; F(x) = " << testFunc(test)<< "; Ln(x) = " << lagranz(test, OX, OY, 5)<<endl;
         //как видим интерполяция точна  
     }
     getchar();
@@ -50,15 +37,14 @@ int main(int argc, char** argv) {
     }
     cout<<endl;
     for (int i = 0; i < 5; i++) { 
-        OY[i] = NumMet::rnd();
+        OY[i] = OX[i] * OX[i]; //меняем на какую-то конкретную ф-цию, х^2
         cout << OY[i] <<"\t";
     }
-    cout << endl;
-    /*У нас есть N точeк, степень полинома не больше, чем N-1*/
-    for (double test = -5.0; test  <= 5.0; test += 1.0) {
-        cout << " Test value = " << test << " F = " << lagranz(test, OX, OY, 5)<<endl;
+    cout<<"\n Значение в узлах :\n";
+    for ( int i = 0; i < 5; i++){
+        cout <<"X = " << OX[i] << "\tF(x)= "<<OY[i]<<"\tLn(x) = "<<lagranz(OX[i], OX, OY, 5)<<endl;
     }
-    getchar();
+    cout << endl;
     
     /*Task 2 ::: */
     /*f(x) = 1/(1+d*x^2), x [-1;1], d = 10+k;*/
