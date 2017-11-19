@@ -1,14 +1,15 @@
  #include <stdio.h>
      #include <plot.h>
 #include <math.h>
+#include "C_Plot.h"
      #define MAXORDER 12
-double myExp(double x)
+/*double myExp(double x)
 {
     return exp(x);
-}
- void drawAxises(plPlotter * plotter, double minX, double minY, double maxX, double maxY, const char* color); //рисует оси. OX э [minX, maxX], OY э [minY, maxY] цвета color
- void drawSegsX(plPlotter * plotter, double xStart, double xEnd, double y, double step, double len, const char * color ); // рисует засечки по оси Х  на высоте  Y длины len  (пол len вверх, пол len вниз, шаг step, цвет color 
- void drawSegsY (plPlotter * plotter, double yStart, double yEnd, double x, double step, double len, const char * color); //рисует засечки  по оси У по широте X длины len
+}*/
+// void drawAxises(plPlotter * plotter, double minX, double minY, double maxX, double maxY, const char* color); //рисует оси. OX э [minX, maxX], OY э [minY, maxY] цвета color
+// void drawSegsX(plPlotter * plotter, double xStart, double xEnd, double y, double step, double len, const char * color ); // рисует засечки по оси Х  на высоте  Y длины len  (пол len вверх, пол len вниз, шаг step, цвет color 
+// void drawSegsY (plPlotter * plotter, double yStart, double yEnd, double x, double step, double len, const char * color); //рисует засечки  по оси У по широте X длины len
  void draw_c_curve (plPlotter *plotter, double dx, double dy, int order)
      {
        if (order >= MAXORDER)
@@ -51,7 +52,8 @@ double myExp(double x)
        pl_pencolorname_r (plotter, "red"); /* use red pen */
        pl_erase_r (plotter);               /* erase graphics display */
        pl_fmove_r (plotter, 600.0, 300.0); /* position the graphics cursor */
-       pl_endpath_r(plotter);
+          pl_endpath_r(plotter);
+       //initPlot(plotter, plotter_params, 0, 0, 240, 320, .5 , "red");
        drawAxises(plotter,0,0,240,320, "black" );
        drawSegsX(plotter, 0, 240, fabs(320)/2., 10, 10, "red");
        for (int i = 0; i <= 100; i++){
@@ -73,7 +75,7 @@ double myExp(double x)
        
        return 0;
      }
- void drawAxises(plPlotter * plotter, double minX, double minY, double maxX, double maxY, const char* color) 
+ /*void drawAxises(plPlotter * plotter, double minX, double minY, double maxX, double maxY, const char* color) 
  {
      pl_endpath_r(plotter);
      pl_pencolorname_r(plotter, color);
@@ -104,3 +106,4 @@ double myExp(double x)
       }
       pl_endpath_r(plotter);
   }
+   */
