@@ -20,7 +20,7 @@ extern "C" {
     {
         /* set a Plotter parameter */
        plott_params = pl_newplparams ();
-       pl_setplparam (plott_params, "PAGESIZE", "letter");
+       pl_setplparam (plott_params, "PAGESIZE", (char*)"letter");
      
        /* create a Postscript Plotter that writes to standard output */
        if ((plott = pl_newpl_r ("X", stdin, stdout, stderr,
