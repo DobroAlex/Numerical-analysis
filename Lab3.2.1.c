@@ -9,10 +9,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "C_Plot.h"
-#define MINX -3.0
-#define MINY -3.0
-#define MAXX 3.
-#define MAXY 3.
+#define MINX .0
+#define MINY .0
+#define MAXX 10.
+#define MAXY 10.
 
 #define MY_VAR 7
 
@@ -20,7 +20,7 @@ double f(double x);//несколько абстрактная ф-ция f(x) и
 double Hn(double x, double a, double b , double pp, double pp1 );//ф-ла (3) из теории 
 double h;
 int main(int argc, char** argv) {
-    double x[100], y[100], p1 = 1., p2 = -1.; //выбор точек
+    double  p1 = 1., p2 = -1.; //выбор точек, p1 = f'(-1), p2 = f'(1)
     int n = 1;
     h = 2./(double)(n);
     plPlotter *plotter;
@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
        pl_erase_r (plotter);               /* erase graphics display */
        //pl_fmove_r (plotter, 600.0, 300.0); /* position the graphics cursor */
        pl_endpath_r(plotter);
-       drawAxises(plotter, MINX, MINY, MAXX, MAXY, 0.00001, "black");
+       drawAxises(plotter, MINX, MINY, MAXX, MAXY, 0.01, "black");
        pl_endpath_r(plotter);
        
     while (p1 != 1488 && p2 != 1488) {
@@ -61,10 +61,10 @@ int main(int argc, char** argv) {
             printf("\ty1 = %lf", y1);
             printf("\tj = %d", j);
             pl_pencolorname_r (plotter, "red");
-            pl_fpoint_r(plotter, x1, y1);
-            
+            pl_fpoint_r(plotter, x1+fabs(MAXX-MINX)/2., (y1)+fabs(MAXY-MINY)/2.); // корректное отображение относительно OX,OY
         }
         scanf("%lf%lf", &p1, &p2);
+        pl_erase_r(plotter);
     }
     printf("End");
     
