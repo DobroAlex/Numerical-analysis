@@ -5,6 +5,7 @@
  *
  * Created on 19 ноября 2017 г., 11:34
  */
+/*REQUIREMENTS  :  libplot-dev, libplot2c2, libploticus0, libploticus0-dev , plotutils*/
 /*WARNING : to compile this header, U need to add "-lplot -lXaw -lXmu -lXt -lSM -lICE -lXext -lX11 -lpng -lz -lm" for gcc/C 
  and "   -lplotter -lXaw -lXmu -lXt -lSM -lICE -lXext -lX11 -lpng -lz -lm" for g++/C++*/
 #ifndef C_PLOT_H
@@ -44,13 +45,14 @@ extern "C" {
     }
     void drawAxises(plPlotter * plotter, double minX, double minY, double maxX, double maxY,double thick,  const char* color) //рисует оси. OX э [minX, maxX], OY э [minY, maxY] цвета color
  {
-     pl_endpath_r(plotter);
-     pl_pencolorname_r(plotter, color);
-     pl_flinewidth_r (plotter, thick);
-     pl_line_r(plotter, minX, fabs(maxY-minY)/2., maxX, fabs(maxY-minY)/2.);
-     pl_endpath_r(plotter);
-     pl_line_r(plotter, fabs(maxX-minX)/2., minY, fabs(maxX-minX)/2., maxY);
-     pl_endpath_r(plotter);
+
+    pl_endpath_r(plotter);
+    pl_pencolorname_r(plotter, color);
+    pl_flinewidth_r (plotter, thick);
+    pl_line_r(plotter, minX, fabs(maxY-minY)/2., maxX, fabs(maxY-minY)/2.);
+    pl_endpath_r(plotter);
+    pl_line_r(plotter, fabs(maxX-minX)/2., minY, fabs(maxX-minX)/2., maxY);
+    pl_endpath_r(plotter);
  }
 void drawSegsX(plPlotter * plotter, double xStart,  double xEnd, double y, double step, double len, const char * color ) // рисует засечки по оси Х  на высоте  Y длины len  (пол len вверх, пол len вниз, шаг step, цвет color 
   {
