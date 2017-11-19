@@ -10,6 +10,8 @@
  and "   -lplotter -lXaw -lXmu -lXt -lSM -lICE -lXext -lX11 -lpng -lz -lm" for g++/C++*/
 #ifndef C_PLOT_H
 #define C_PLOT_H
+#include <limits.h>
+#include <float.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -54,13 +56,13 @@ extern "C" {
     pl_line_r(plotter, fabs(maxX-minX)/2., minY, fabs(maxX-minX)/2., maxY);
     pl_endpath_r(plotter);
  }
-void drawSegsX(plPlotter * plotter, double xStart,  double xEnd, double y, double step, double len, const char * color ) // рисует засечки по оси Х  на высоте  Y длины len  (пол len вверх, пол len вниз, шаг step, цвет color 
+void drawSegsX(plPlotter * plotter, double xStart,  double xEnd, double y, double step, double len, const char * color ) // рисует засечки по оси Х  на высоте  Y длины len  ( len вверх, пол len , шаг step, цвет color 
   {
       pl_endpath_r(plotter);
       pl_pencolorname_r(plotter, color);
       for (double i = xStart; i <= xEnd; i += step ) {
           pl_endpath_r(plotter);
-          pl_line_r(plotter, i, y + len/2. , i, y -len/2.);
+          pl_line_r(plotter, i, y + len , i, y - len);
           pl_endpath_r(plotter);
       }
       pl_endpath_r(plotter);
