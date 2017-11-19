@@ -62,7 +62,7 @@ void drawSegsX(plPlotter * plotter, double xStart,  double xEnd, double y, doubl
       pl_pencolorname_r(plotter, color);
       for (double i = xStart; i <= xEnd; i += step ) {
           pl_endpath_r(plotter);
-          pl_line_r(plotter, i, y + len , i, y - len);
+          pl_fline_r(plotter, i, y + len , i, y - len);
           pl_endpath_r(plotter);
       }
       pl_endpath_r(plotter);
@@ -73,7 +73,7 @@ void drawSegsY (plPlotter * plotter, double yStart, double yEnd, double x, doubl
       pl_pencolorname_r(plotter, color);
       for (double i = yStart; i <= yEnd; i += step ) {
           pl_endpath_r(plotter);
-          pl_line_r(plotter,  x + len/2., i ,    x - len/2. , i );
+          pl_fline_r(plotter,  x + len/2., i ,    x - len/2. , i );
           pl_endpath_r(plotter);
       }
       pl_endpath_r(plotter);
