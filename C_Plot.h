@@ -40,11 +40,13 @@ extern "C" {
        pl_flinewidth_r (plott, thickness);    /* set line thickness */
        pl_pencolorname_r (plott, color); /* use red pen */
        pl_erase_r(plott);
+       return 0; //if everyting is fine
     }
-    void drawAxises(plPlotter * plotter, double minX, double minY, double maxX, double maxY, const char* color) //рисует оси. OX э [minX, maxX], OY э [minY, maxY] цвета color
+    void drawAxises(plPlotter * plotter, double minX, double minY, double maxX, double maxY,double thick,  const char* color) //рисует оси. OX э [minX, maxX], OY э [minY, maxY] цвета color
  {
      pl_endpath_r(plotter);
      pl_pencolorname_r(plotter, color);
+     pl_flinewidth_r (plotter, thick);
      pl_line_r(plotter, minX, fabs(maxY-minY)/2., maxX, fabs(maxY-minY)/2.);
      pl_endpath_r(plotter);
      pl_line_r(plotter, fabs(maxX-minX)/2., minY, fabs(maxX-minX)/2., maxY);
