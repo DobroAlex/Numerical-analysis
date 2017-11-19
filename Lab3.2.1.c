@@ -68,6 +68,8 @@ int main(int argc, char** argv) {
         scanf("%lf%lf", &p1, &p2);
         pl_erase_r(plotter);
         drawAxises(plotter, MINX, MINY, MAXX, MAXY, 0.01, "black");
+        drawSegsX(plotter, MINX, MAXX, fabs(MAXY-MINY)/2., 1./fabs(MAXX-MINX), .000001, "black");
+        drawSegsY(plotter, MINY, MAXY, fabs(MAXX-MINX)/2.,  1./fabs(MAXY-MINY), .000001, "black");
     }
     printf("End");
     
