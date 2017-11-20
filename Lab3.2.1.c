@@ -64,7 +64,9 @@ int main(int argc, char** argv) {
             printf("\tj = %d\n", j);
             pl_pencolorname_r (plotter, "red");
             pl_fpoint_r(plotter, x1+fabs(MAXX-MINX)/2., (y1)+fabs(MAXY-MINY)/2.); // корректное отображение относительно OX,OY
-        }
+        }       
+        printf("Current f'(-1) = %lf, f'(1) = %lf\n", p1 , p2);
+        printf("Input new f'(-1) and new f'(1)\n");
         scanf("%lf%lf", &p1, &p2);
         pl_erase_r(plotter);
         drawAxises(plotter, MINX, MINY, MAXX, MAXY, 0.01, "black");
