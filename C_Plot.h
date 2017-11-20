@@ -51,9 +51,9 @@ extern "C" {
     pl_endpath_r(plotter);
     pl_pencolorname_r(plotter, color);
     pl_flinewidth_r (plotter, thick);
-    pl_line_r(plotter, minX, fabs(maxY-minY)/2., maxX, fabs(maxY-minY)/2.);
+    pl_fline_r(plotter, minX, fabs(maxY-minY)/2., maxX, fabs(maxY-minY)/2.);
     pl_endpath_r(plotter);
-    pl_line_r(plotter, fabs(maxX-minX)/2., minY, fabs(maxX-minX)/2., maxY);
+    pl_fline_r(plotter, fabs(maxX-minX)/2., minY, fabs(maxX-minX)/2., maxY);
     pl_endpath_r(plotter);
  }
 void drawSegsX(plPlotter * plotter, double xStart,  double xEnd, double y, double step, double len, const char * color ) // рисует засечки по оси Х  на высоте  Y длины len  ( len вверх, пол len , шаг step, цвет color 
