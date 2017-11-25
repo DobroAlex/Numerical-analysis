@@ -13,7 +13,7 @@
 #define MAXY 4.
 #define MY_VAR 7
 double f(double x);//несколько абстрактная ф-ция f(x) из  первой части второго задания. 
-double f1(double x, int k); // 1/1(1+dx^2)
+double f1(double x); // 1/1(1+dx^2)
 double Hn(double x, double a, double b); //ф-ла (3) из теории 
 double h;
 
@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     int n = 3; //кратность производной?
     int X[100], Y[100];
         h = 2. / (double)n;
-        for (int  i = 0 ; i < n; i++)
+        for (int  i = 0 ; i <= n; i++)
         {
             X[i] = -1.0 + (double)i * h;
             Y[i] = f(X[i]);
@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
                 int j2 = (int) (X[i]*100000.);
                 while (j2 <= (int) (X[i+1]*100000.))
                 {
-                    double x12 = 1.E-5 * (double)j2;
+                    double x12 = 1.0E-5 * (double)j2;
                     double y1 = Hn(x12, X[i], X[i + 1]);
                     pl_pencolorname_r (plotter, "blue");
                     pl_fpoint_r(plotter, x12+fabs(MAXX-MINX)/2., (y1)+fabs(MAXY-MINY)/2.); // корректное отображение относительно OX,OY
@@ -84,6 +84,12 @@ int main(int argc, char** argv) {
                 i++;
             }
             scanf("%d", &n);
+            h = 2. / (double)n;
+            for (int  i = 0 ; i <= n; i++)
+            {
+                X[i] = -1.0 + (double)i * h;
+                Y[i] = f(X[i]);
+            }
             pl_erase_r (plotter);  
             drawAxises(plotter, MINX, MINY, MAXX, MAXY, 0.01, "black");
             drawSegsX(plotter, MINX, MAXX, fabs(MAXY-MINY)/2., fabs((MAXX-MINX)/(MAXX-MINX)), .5, "black");
@@ -98,13 +104,13 @@ double f(double x){ //несколько абстрактная ф-ция f(x) �
     return 1. / (1. +  MY_VAR*pow(x, 2.));
 }
 double Hn(double x, double a, double b) { //ф-ла (3) из теории 
-    double h1 = b -a ;
+    //double h1 = b -a ;
     double k = (x - a) / h;
-    return (1. - 3. * pow(k, 2.) + 2 *  pow(k, 3)) * f(a) + (3. * pow(k, 2)  - 2 * pow(k, 3.)) * f(b) + h* (k - 2. * pow(k, 2.) + pow(k, 3.)) * f1(a, k ) + h * (-pow(k, 2.) + pow(k, 3)) * f1(b, k);
+    return (1. - 3. * pow(k, 2.) + 2 *  pow(k, 3.)) * f(a) + (3. * pow(k, 2.)  - 2. * pow(k, 3.)) * f(b) + h* (k - 2. * pow(k, 2.) + pow(k, 3.)) * f1(a ) + h * (-1.*pow(k, 2.) + pow(k, 3)) * f1(b);
 } 
-double f1(double x, int k) // 1/1(1+dx^2)
+double f1(double x) // 1/1(1+dx^2)
 {
-    int d = k + 5;
-    return -2*MY_VAR*x*(1)/(1.+ (double)d * x * x);
+    
+    return -2*MY_VAR*x/pow( (1. + 23. * pow(x, 2.)), 2.);
 }
 
