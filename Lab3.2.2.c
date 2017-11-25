@@ -11,7 +11,7 @@
 #define MINY .0
 #define MAXX 4.
 #define MAXY 4.
-#define MY_VAR 7
+#define MY_VAR 23
 double f(double x);//несколько абстрактная ф-ция f(x) из  первой части второго задания. 
 double f1(double x); // 1/1(1+dx^2)
 double Hn(double x, double a, double b); //ф-ла (3) из теории 
@@ -77,11 +77,13 @@ int main(int argc, char** argv) {
                     double x12 = 1.0E-5 * (double)j2;
                     double y1 = Hn(x12, X[i], X[i + 1]);
                     pl_pencolorname_r (plotter, "blue");
-                    pl_fpoint_r(plotter, x12+fabs(MAXX-MINX)/2., (y1)+fabs(MAXY-MINY)/2.); // корректное отображение относительно OX,OY
+                    pl_fpoint_r(plotter, x12+fabs(MAXX-MINX)/2., y1+fabs(MAXY-MINY)/2.); // корректное отображение относительно OX,OY
+                    pl_fcircle_r(plotter, X[n]+fabs(MAXX-MINX)/2., Y[n]+fabs(MAXY-MINY)/2., .03);
                     j2++;
                 }
                 
                 i++;
+                
             }
             scanf("%d", &n);
             h = 2. / (double)n;
@@ -104,9 +106,9 @@ double f(double x){ //несколько абстрактная ф-ция f(x) �
     return 1. / (1. +  MY_VAR*pow(x, 2.));
 }
 double Hn(double x, double a, double b) { //ф-ла (3) из теории 
-    //double h1 = b -a ;
-    double k = (x - a) / h;
-    return (1. - 3. * pow(k, 2.) + 2 *  pow(k, 3.)) * f(a) + (3. * pow(k, 2.)  - 2. * pow(k, 3.)) * f(b) + h* (k - 2. * pow(k, 2.) + pow(k, 3.)) * f1(a ) + h * (-1.*pow(k, 2.) + pow(k, 3)) * f1(b);
+    double h1 = b -a ;
+    double k = (x - a) / h1;
+    return (1. - 3. * pow(k, 2.) + 2 *  pow(k, 3.)) * f(a) + (3. * pow(k, 2.)  - 2. * pow(k, 3.)) * f(b) + h1* (k - 2. * pow(k, 2.) + pow(k, 3.)) * f1(a ) + h1 * (-1.*pow(k, 2.) + pow(k, 3)) * f1(b);
 } 
 double f1(double x) // 1/1(1+dx^2)
 {
