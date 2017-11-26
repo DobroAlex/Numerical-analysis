@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
                     double y1 = Hn(x12, X[i], X[i + 1]);
                     pl_pencolorname_r (plotter, "blue");
                     pl_fpoint_r(plotter, x12+fabs(MAXX-MINX)/2., y1+fabs(MAXY-MINY)/2.); // корректное отображение относительно OX,OY
-                    pl_fcircle_r(plotter, X[n]+fabs(MAXX-MINX)/2., Y[n]+fabs(MAXY-MINY)/2., .03);
+                    //pl_fcircle_r(plotter, X[n]+fabs(MAXX-MINX)/2., Y[n]+fabs(MAXY-MINY)/2., .03);
                     j2++;
                 }
                 
@@ -100,19 +100,32 @@ int main(int argc, char** argv) {
 
        }
        printf("Finished");
+       if (pl_closepl_r (plotter) < 0)     /* close Plotter */
+         {
+           fprintf (stderr, "Couldn't close Plotter\n");
+           return 1;
+         }
+     
+       if (pl_deletepl_r (plotter) < 0)    /* delete Plotter */
+         {
+           fprintf (stderr, "Couldn't delete Plotter\n");
+           return 1;
+         }
     return 0;
 }
 double f(double x){ //несколько абстрактная ф-ция f(x) из  первой части второго задания. 
     return 1. / (1. +  MY_VAR*pow(x, 2.));
 }
 double Hn(double x, double a, double b) { //ф-ла (3) из теории 
-    double h1 = b -a ;
-    double k = (x - a) / h1;
-    return (1. - 3. * pow(k, 2.) + 2 *  pow(k, 3.)) * f(a) + (3. * pow(k, 2.)  - 2. * pow(k, 3.)) * f(b) + h1* (k - 2. * pow(k, 2.) + pow(k, 3.)) * f1(a ) + h1 * (-1.*pow(k, 2.) + pow(k, 3)) * f1(b);
+    //double h1 = b -a ;
+    //double k = (x - a) / h1;
+    double k = (x-a)/h;
+    
+    return (1. - 3. * pow(k, 2.) + 2 *  pow(k, 3.)) * f(a) + (3. * pow(k, 2.)  - 2. * pow(k, 3.)) * f(b) + h* (k - 2. * pow(k, 2.) + pow(k, 3.)) * f1(a ) + h * (-1.*pow(k, 2.) + pow(k, 3)) * f1(b);
 } 
 double f1(double x) // 1/1(1+dx^2)
 {
     
-    return -2*MY_VAR*x/pow( (1. + 23. * pow(x, 2.)), 2.);
+    return (-2*MY_VAR*x)/pow( (1. + 23. * pow(x, 2.)), 2.);
 }
 
