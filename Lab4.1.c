@@ -15,7 +15,10 @@
 #define MAXX 4.
 #define MAXY 4.
 #define MY_VAR 7
-void progonka (const double x [], const double y [], const double h [], double S1, double S2);// та самая прогонка
+void progonka (  double x [],   double y [],   double h [],  double  S1, double    S2);// та самая прогонка
+void form (double a[], double  b[], double c [], double f [],  double x [], double y [], double h [], double S1, double S2 );
+int n = 4;
+
 int main(int argc, char** argv) {
         plPlotter *plotter;
         plPlotterParams *plotter_params;
@@ -50,7 +53,7 @@ int main(int argc, char** argv) {
         pl_endpath_r(plotter);
         double h[100], s[100], x[] = {-2. , -1. , .0, 1. , 2.}, y[] = {.0 , .7, 1. , .7, .0};// x[] -- точки графика на оси X y[] -- соответствующие значения на ОУ
         double S1 = .0, S2 = 10.; //значения производных в двух точках
-        int n = 4;
+        
         for (int i = 1; i <= n; i++)
         {
             h[i] = x[i] - x[i - 1]; //дельта между каждым шагом
@@ -75,7 +78,27 @@ int main(int argc, char** argv) {
        return (0);
 }
 
-void progonka (const double x [], const double y [], const double h [], double S1, double S2)// та самая прогонка Важно понять, что при использовании массива в качестве аргумента функции происходит передача в функцию его адреса. Это означает, что код внутри функции действует и может изменять настоящее значение массива, используемого при вызове.
+void form (double a[], double  b[], double c [], double f [],  double x [], double y [], double h [], double S1, double S2 )
+{
+    a[0] = .0;
+    b[0] = 2.;
+    c[0] = 1.;
+    f[0] = 6. * ((y[1] - y[0]) / pow(h[1], 2.) - S1 / pow(h[1], 2.));
+    for (int i = 0; i <  n; i++)
+    {
+        a[i] = h[i];
+        b[i] = 2. * (h[i] + h[i+1]);
+        c[i] = h[i+1];
+        f[i] = 6.0 * ((y[i + 1] - y[i]) / h[i + 1] - (y[i] - y[i - 1]) / h[i]);
+        
+    }
+    a[n] = 1.;
+    b[n] = 2.;
+    c[n] = .0;
+    f[n] = -6. * ((y[n] - y[n - 1]) / pow(h[n], 2.0) - S2 / pow(h[n], 2.0));
+}
+
+void progonka (  double x [],   double y [],   double h [],  double  S1, double    S2)// та самая прогонка Важно понять, что при использовании массива в качестве аргумента функции происходит передача в функцию его адреса. Это означает, что код внутри функции действует и может изменять настоящее значение массива, используемого при вызове.
 {
     double * a = (double *) malloc(100 * sizeof(double));
     double * b = (double *) malloc(100 * sizeof(double));
