@@ -14,36 +14,49 @@
 #define DEBUG 
 /*Нужен для отладочных целей, при этом интеграл считается от 1/x на [1,2].
  Чтоб убрать связанный вывод и запустить основную функцию вычсиления, закомментируйте строку #define DEBUG */
+double Round (double x, int precision);
 bool isEqual(double a, double b); //проверяет два double на равенство через машинный эпсилон
 double testFunc(double x); //интегрируемая функция
-double integrSimpson (double epsilon, double a, double b,double h); //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x)
+double integrSimpson (double epsilon, double a, double b, double M); //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x). M  = max[a,b] (производная p раз (для Симпсона 4) f(x), считаем ручками
 int main(int argc, char** argv) {
 #ifdef DEBUG
-    printf("\n\n\t\t%lf",integrSimpson(.01, 1, 2, .5));
+    printf("\n\n\t\t%lf",integrSimpson(.01, 1, 2, 24));
+    return 0;
 #endif
-#ifndef DEBUG
-    printf("\n\n\t\t%lf",integrSimpson(.01, 0, 1, .5));
-#endif
+    //работаeм с основной ф-цией 
+    printf("\n\n\t\t%lf",integrSimpson(.000001, 0, 1, .5));
+
     return 0;
 }
+
+double Round (double x, int precision)
+{
+   int mul = 10;
+   
+   for (int i = 0; i < precision; i++)
+      mul *= mul;
+   if (x > 0)
+      return floor(x * mul + .5) / mul;
+   else
+      return ceil(x * mul - .5) / mul;
+}
+
 double testFunc(double x)//интегрируемая функция
 {
 #ifdef DEBUG
     return 1./x;
 #endif
-#ifndef DEBUG
-    return (cosh(x)-1.)/x;
-#endif
+    return (sin(x))/x;
 }
-double integrSimpson (double epsilon, double a, double b, double h) //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x)
+double integrSimpson (double epsilon, double a, double b, double M) //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x). M  = max[a,b] (производная p раз (для Симпсона 4) f(x), считаем ручками
 {
     const int A = 180; //знаменатель из формулы оценки погрешности
     const int p = 4; // порядок апроксимации
+    double h = pow(((A * epsilon)/(fabs(b-a)*M)), 1./p);
+    printf ("\nh = %lf",h);
     double S2, S1; //для формулы Рунге
-    int n = (b-a)/h;
-#ifdef DEBUG
+    int n = ceil(((b-a)/h)); //окургляем вверх TODO : спросить, куда правильно окурглять если n не целое 
     printf("\nn=%d\n\n",n);
-#endif
     double  * x0 =  (double *) malloc( (n+1) * sizeof(double)), *f0 = (double*) malloc((n+1) * sizeof(double));//явный каст для собирающих g++
     double sumOfOdd= .0;
     double sumOfEven = .0;
@@ -52,9 +65,7 @@ double integrSimpson (double epsilon, double a, double b, double h) //интег
     {
         x0[i] = a+i*h;
         f0[i] = testFunc(x0[i]);
-#ifdef DEBUG
         printf ("X0[%d] = %f , F0[%d] =  %f\t", i, x0[i], i, f0[i]);
-#endif
     
     }
     for (int i = 1; i < n; i++)
@@ -64,9 +75,7 @@ double integrSimpson (double epsilon, double a, double b, double h) //интег
             sumOfEven += f0[i];
         }
     }
-#ifdef DEBUG
     printf("\n sumOfEven =  %lf\n", sumOfEven);
-#endif 
     for (int  i = 1; i <=n ; i++)
     {
         if ( i % 2 != 0)
@@ -74,13 +83,12 @@ double integrSimpson (double epsilon, double a, double b, double h) //интег
             sumOfOdd += f0[i];
         }
     }
-#ifdef DEBUG  
     printf("\n sumOfOdd =  %lf\n", sumOfOdd);
-#endif 
-#ifdef DEBUG
-    //printf ("h/3 = %lf , f0 = %lf, 4*Odd + ")
-#endif
-    return (h/3.) * (testFunc(x0[0]) + 4 * sumOfOdd + 2 * sumOfEven + testFunc(x0[n]));
+    printf ("h/3 = %lf , f0 = %lf, 4*Odd = %lf, 2 * Even = %lf, fn = %lf ", h/3., f0[0], 4* sumOfOdd, 2 * sumOfEven, f0[n]);
+    const double answer = (h/3.) * (testFunc(x0[0]) + 4 * sumOfOdd + 2 * sumOfEven + testFunc(x0[n]));
+    printf ("\n Epsilon = %lf , answer = %lf ", epsilon , answer);
+    //return (h/3.) * (testFunc(x0[0]) + 4 * sumOfOdd + 2 * sumOfEven + testFunc(x0[n]));
+    return answer;
 }
 bool isEqual(double a, double b) //проверяет два double на равенство через машинный эпсилон
 {
