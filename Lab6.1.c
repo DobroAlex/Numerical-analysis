@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  * File:   Lab6.1.c
  * Author: DobroAlex
@@ -17,12 +11,19 @@
 #include <tgmath.h>
 #include <stdbool.h>
 #include <float.h>
-#define DEBUG
+#define DEBUG 
+/*Нужен для отладочных целей, при этом интеграл считается от 1/x на [1,2].
+ Чтоб убрать связанный вывод и запустить основную функцию вычсиления, закомментируйте строку #define DEBUG */
 bool isEqual(double a, double b); //проверяет два double на равенство через машинный эпсилон
 double testFunc(double x); //интегрируемая функция
 double integrSimpson (double epsilon, double a, double b,double h); //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x)
 int main(int argc, char** argv) {
+#ifdef DEBUG
     printf("\n\n\t\t%lf",integrSimpson(.01, 1, 2, .5));
+#endif
+#ifndef DEBUG
+    printf("\n\n\t\t%lf",integrSimpson(.01, 0, 1, .5));
+#endif
     return 0;
 }
 double testFunc(double x)//интегрируемая функция
