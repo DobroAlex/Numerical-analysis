@@ -20,11 +20,11 @@ double testFunc(double x); //интегрируемая функция
 double integrSimpson (double epsilon, double a, double b, double M); //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x). M  = max[a,b] (производная p раз (для Симпсона 4) f(x), считаем ручками
 int main(int argc, char** argv) {
 #ifdef DEBUG
-    printf("\n\n\t\t%lf",integrSimpson(.01, 1, 2, 24));
+    printf("\n\n\t\t%lf",integrSimpson(.0000001, 1, 2, 24));
     return 0;
 #endif
     //работаeм с основной ф-цией 
-    printf("\n\n\t\t%lf",integrSimpson(.000001, 0, 1, .5));
+    printf("\n\n\t\t%lf",integrSimpson(.01, 0, 1, .5));
 
     return 0;
 }
