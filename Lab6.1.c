@@ -11,7 +11,7 @@
 #include <tgmath.h>
 #include <stdbool.h>
 #include <float.h>
-//#define DEBUG 
+//#define DEBUG  //тут отладка Симпсона для ф-ции 1/x, основная часть кода работает, когда эта строка закомментирована / удалена
 /*Нужен для отладочных целей, при этом интеграл считается от 1/x на [1,2].
  Чтоб убрать связанный вывод и запустить основную функцию вычсиления, закомментируйте строку #define DEBUG */
 int dtoi ( double x); //переносит все числа справа от запятой влево путем последовательного умножения на 10
@@ -19,16 +19,16 @@ double Round (double x, int precision);
 bool isEqual(double a, double b); //проверяет два double на равенство через машинный эпсилон
 double testFunc(double x); //интегрируемая функция
 double integrSimpson (double epsilon, double a, double b, double M); //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x). M  = max[a,b] (производная p раз (для Симпсона 4) f(x), считаем ручками
-double centralRect(double a, double b, int n); //центральые прямоугльники на отрезке [a;b]  с разбиением на n отрезков
+double centralRect(double a, double b, int n); //центральые прямоугльники на отрезке [a;b]  с разбиением на n отрезков http://mathprofi.ru/metod_prjamougolnikov.html
 int main(int argc, char** argv) {
-#ifdef DEBUG
+#ifdef DEBUG //тут отладка Симпсона для ф-ции 1/x
     printf("\n\n\t\t Simps = %lf, central = %lf",integrSimpson(.01, 1, 2, 24), centralRect(1,2));
     printf ("\n dtoi = %d", dtoi(10.101));
     printf ("\n round = %lf", Round(10.567, 0));
     return 0;
 #endif
     //работаeм с основной ф-цией 
-    printf("\n\n\t\t simps = %lf, central = %lf ",integrSimpson(.01, 0, 1, .5), centralRect(0, 1, 10  ));
+    printf("\n\n\t\t simps = %lf, central = %lf ",integrSimpson(.01, 0, 1, .5), centralRect(0, 1, 5  )); //как видим, центральные прямоугольники весьма некисло приближают ф-ции на которых Симпсон садится в лужу
 
     return 0;
 }
@@ -47,10 +47,11 @@ double Round (double x, int precision)
 
 double testFunc(double x)//интегрируемая функция
 {
-#ifdef DEBUG
+#ifdef DEBUG //тут отлаживал домашку
     return 1./x;
 #endif
-    return (sin(x))/x;
+    return (sin(x))/x; //основная ф-ция, первый вариант
+    //return (cosh(x)-x)/1.; //5 вариант
     //return 1./log(x); http://mathprofi.ru/metod_prjamougolnikov.html
 }
 double centralRect(double a, double b,  int n) //центральые прямоугльники на отрезке [a;b]  
@@ -83,17 +84,7 @@ double centralRect(double a, double b,  int n) //центральые прямо
     }
     printf ("\nSum  = %lf\n\n", sum);
     return h *sum;
-    /*double v =.1; //наверняка можно уменьшить
-    double sum  = .0;
-    double res;
-    for (int i = 0; i < n; i++)
-    {
-        yVals[i] = testFunc(v);
-        v += h;
-        sum += yVals[i];
-    }
-    res = h * sum;
-    return res;*/
+
 }
 double integrSimpson (double epsilon, double a, double b, double M) //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x). M  = max[a,b] (производная p раз (для Симпсона 4) f(x), считаем ручками
 {
