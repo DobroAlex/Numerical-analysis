@@ -19,16 +19,16 @@ double Round (double x, int precision);
 bool isEqual(double a, double b); //проверяет два double на равенство через машинный эпсилон
 double testFunc(double x); //интегрируемая функция
 double integrSimpson (double epsilon, double a, double b, double M); //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x). M  = max[a,b] (производная p раз (для Симпсона 4) f(x), считаем ручками
-double centralRect(double a, double b, double h); //центральые прямоугльники на отрезке [a;b]  с шагом(?) h
+double centralRect(double a, double b, int n); //центральые прямоугльники на отрезке [a;b]  с разбиением на n отрезков
 int main(int argc, char** argv) {
 #ifdef DEBUG
-    printf("\n\n\t\t Simps = %lf, central = %lf",integrSimpson(.01, 1, 2, 24), centralRect(1,2, .0001));
+    printf("\n\n\t\t Simps = %lf, central = %lf",integrSimpson(.01, 1, 2, 24), centralRect(1,2));
     printf ("\n dtoi = %d", dtoi(10.101));
     printf ("\n round = %lf", Round(10.567, 0));
     return 0;
 #endif
     //работаeм с основной ф-цией 
-    printf("\n\n\t\t simps = %lf, central = %lf ",integrSimpson(.01, 0, 1, .5), centralRect(1, 3, .000001));
+    printf("\n\n\t\t simps = %lf, central = %lf ",integrSimpson(.01, 0, 1, .5), centralRect(2, 5, 5  ));
 
     return 0;
 }
@@ -50,13 +50,30 @@ double testFunc(double x)//интегрируемая функция
 #ifdef DEBUG
     return 1./x;
 #endif
-    return (sin(x))/x;
+    //return (sin(x))/x;
+    return 1./log(x);
 }
-double centralRect(double a, double b, double h) //центральые прямоугльники на отрезке [a;b]  с шагом(?) h
+double centralRect(double a, double b,  int n) //центральые прямоугльники на отрезке [a;b]  
 {
-    int n = round(1./h);
-    double * yVals = (double *) malloc(n * sizeof(double)); //массив значенйи 
-    double v =.1; //наверняка можно уменьшить
+    printf ("__________________________\nCENTRAL RECTS \n__________________________\n");
+    //int n = round(1./h);
+    double h = (b-a)/n;
+    printf ("h = %lf\n", h);
+    double * yVals = (double *) malloc((n+1) * sizeof(double)); //массив значенйи f(x)
+    double * xVals = (double *) malloc((n+1) *sizeof(double)); //массив средних точек
+    xVals[0] = a;
+    for (int i = 1; i <= n; i++)
+    {
+        xVals[i] = xVals[i-1]+h; 
+    }
+    
+    for (int i = 0; i <= n; i++)
+    {
+        printf ("X[%d] = %lf ;", i, xVals[i]);
+    }
+    
+    return 0;
+    /*double v =.1; //наверняка можно уменьшить
     double sum  = .0;
     double res;
     for (int i = 0; i < n; i++)
@@ -66,7 +83,7 @@ double centralRect(double a, double b, double h) //центральые прям
         sum += yVals[i];
     }
     res = h * sum;
-    return res;
+    return res;*/
 }
 double integrSimpson (double epsilon, double a, double b, double M) //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x). M  = max[a,b] (производная p раз (для Симпсона 4) f(x), считаем ручками
 {
