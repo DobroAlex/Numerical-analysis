@@ -11,7 +11,7 @@
 #include <tgmath.h>
 #include <stdbool.h>
 #include <float.h>
-#define DEBUG 
+//#define DEBUG 
 /*Нужен для отладочных целей, при этом интеграл считается от 1/x на [1,2].
  Чтоб убрать связанный вывод и запустить основную функцию вычсиления, закомментируйте строку #define DEBUG */
 int dtoi ( double x); //переносит все числа справа от запятой влево путем последовательного умножения на 10
@@ -19,14 +19,16 @@ double Round (double x, int precision);
 bool isEqual(double a, double b); //проверяет два double на равенство через машинный эпсилон
 double testFunc(double x); //интегрируемая функция
 double integrSimpson (double epsilon, double a, double b, double M); //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x). M  = max[a,b] (производная p раз (для Симпсона 4) f(x), считаем ручками
+double centralRect(double a, double b, double h); //центральые прямоугльники на отрезке [a;b]  с шагом(?) h
 int main(int argc, char** argv) {
 #ifdef DEBUG
-    printf("\n\n\t\t%lf",integrSimpson(.01, 1, 2, 24));
+    printf("\n\n\t\t Simps = %lf, central = %lf",integrSimpson(.01, 1, 2, 24), centralRect(1,2, .0001));
     printf ("\n dtoi = %d", dtoi(10.101));
+    printf ("\n round = %lf", Round(10.567, 0));
     return 0;
 #endif
     //работаeм с основной ф-цией 
-    printf("\n\n\t\t%lf",integrSimpson(.01, 0, 1, .5));
+    printf("\n\n\t\t simps = %lf, central = %lf ",integrSimpson(.01, 0, 1, .5), centralRect(1, 3, .000001));
 
     return 0;
 }
@@ -49,6 +51,22 @@ double testFunc(double x)//интегрируемая функция
     return 1./x;
 #endif
     return (sin(x))/x;
+}
+double centralRect(double a, double b, double h) //центральые прямоугльники на отрезке [a;b]  с шагом(?) h
+{
+    int n = round(1./h);
+    double * yVals = (double *) malloc(n * sizeof(double)); //массив значенйи 
+    double v =.1; //наверняка можно уменьшить
+    double sum  = .0;
+    double res;
+    for (int i = 0; i < n; i++)
+    {
+        yVals[i] = testFunc(v);
+        v += h;
+        sum += yVals[i];
+    }
+    res = h * sum;
+    return res;
 }
 double integrSimpson (double epsilon, double a, double b, double M) //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x). M  = max[a,b] (производная p раз (для Симпсона 4) f(x), считаем ручками
 {
