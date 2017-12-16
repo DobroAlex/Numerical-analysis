@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     return 0;
 #endif
     //работаeм с основной ф-цией 
-    printf("\n\n\t\t simps = %lf, central = %lf ",integrSimpson(.01, 0, 1, .5), centralRect(2, 5, 5  ));
+    printf("\n\n\t\t simps = %lf, central = %lf ",integrSimpson(.01, 0, 1, .5), centralRect(0, 1, 10  ));
 
     return 0;
 }
@@ -50,8 +50,8 @@ double testFunc(double x)//интегрируемая функция
 #ifdef DEBUG
     return 1./x;
 #endif
-    //return (sin(x))/x;
-    return 1./log(x);
+    return (sin(x))/x;
+    //return 1./log(x); http://mathprofi.ru/metod_prjamougolnikov.html
 }
 double centralRect(double a, double b,  int n) //центральые прямоугльники на отрезке [a;b]  
 {
@@ -71,8 +71,18 @@ double centralRect(double a, double b,  int n) //центральые прямо
     {
         printf ("X[%d] = %lf ;", i, xVals[i]);
     }
-    
-    return 0;
+    printf ("\n");
+    for (int i = 0; i < n; i++)
+    {
+        printf ("X[%d] + h/2 = %lf ;", i, xVals[i] + h/2.);
+    }
+    double sum = .0;
+    for (int i = 0; i < n ; i++)
+    {
+        sum += testFunc(xVals[i] + h/2.);
+    }
+    printf ("\nSum  = %lf\n\n", sum);
+    return h *sum;
     /*double v =.1; //наверняка можно уменьшить
     double sum  = .0;
     double res;
