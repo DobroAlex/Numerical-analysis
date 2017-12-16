@@ -14,13 +14,15 @@
 #define DEBUG 
 /*Нужен для отладочных целей, при этом интеграл считается от 1/x на [1,2].
  Чтоб убрать связанный вывод и запустить основную функцию вычсиления, закомментируйте строку #define DEBUG */
+int dtoi ( double x); //переносит все числа справа от запятой влево путем последовательного умножения на 10
 double Round (double x, int precision);
 bool isEqual(double a, double b); //проверяет два double на равенство через машинный эпсилон
 double testFunc(double x); //интегрируемая функция
 double integrSimpson (double epsilon, double a, double b, double M); //интеграл Симпосна на отрезке a,b, с точностью epsilon. Интегрируемая функция -- double testFunc(x). M  = max[a,b] (производная p раз (для Симпсона 4) f(x), считаем ручками
 int main(int argc, char** argv) {
 #ifdef DEBUG
-    printf("\n\n\t\t%lf",integrSimpson(.0000001, 1, 2, 24));
+    printf("\n\n\t\t%lf",integrSimpson(.01, 1, 2, 24));
+    printf ("\n dtoi = %d", dtoi(10.101));
     return 0;
 #endif
     //работаeм с основной ф-цией 
@@ -70,6 +72,10 @@ double integrSimpson (double epsilon, double a, double b, double M) //интег
     }
     for (int i = 1; i < n; i++)
     {
+        if (i == n)
+        {
+            continue;
+        }
         if ( i % 2 == 0)
         {
             sumOfEven += f0[i];
@@ -78,6 +84,10 @@ double integrSimpson (double epsilon, double a, double b, double M) //интег
     printf("\n sumOfEven =  %lf\n", sumOfEven);
     for (int  i = 1; i <=n ; i++)
     {
+        if (i == n)
+        {
+            continue;
+        }
         if ( i % 2 != 0)
         {
             sumOfOdd += f0[i];
@@ -97,4 +107,14 @@ bool isEqual(double a, double b) //проверяет два double на рав�
         return true;
     }
     return false;
+}
+int dtoi ( double x) //переносит все числа справа от запятой влево путем последовательного умножения на 10
+{
+    double right = fabs (x - (int)x);
+    while (isEqual(right, .0) == 0) //MAGIC
+    {
+        x *= 10.;
+        right  =  fabs (x - (int)x);
+    }
+    return (int)x;
 }
