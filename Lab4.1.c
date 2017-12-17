@@ -18,66 +18,90 @@
 #define MAXY 4.
 #define MY_VAR 7
 double h[100], s[100], x[] = {-2. , -1. , .0, 1. , 2.}, y[] = {.0 , .7, 1. , .7, .0};// x[] -- точки графика на оси X y[] -- соответствующие значения на ОУ
-double S1 = .0, S2 = 10.; //значения производных в двух точках
+double S1 = .0, S2 = -10.; //значения производных в двух точках
 void progonka (  double x [],   double y [],   double h [],  double  S1, double    S2);// та самая прогонка
 void form (double a[], double  b[], double c [], double f [],  double x [], double y [], double h [], double S1, double S2 );
+double Si (double x [], double y [], double s [], double h [], int i, double xx);
 int n = 4;
 
 int main(int argc, char** argv) {
-        plPlotter *plotter;
-        plPlotterParams *plotter_params;
-     
-       /* set a Plotter parameter */
-       plotter_params = pl_newplparams ();
-       pl_setplparam (plotter_params, "PAGESIZE", "letter");
-     
-       /* create a Postscript Plotter that writes to standard output */
-       if ((plotter = pl_newpl_r ("X", stdin, stdout, stderr,
-                                  plotter_params)) == NULL)
-         {
-           fprintf (stderr, "Couldn't create Plotter\n");
-           return 1;
-         }
-     
-        if (pl_openpl_r (plotter) < 0)      /* open Plotter */
-         {
-           fprintf (stderr, "Couldn't open Plotter\n");
-           return 1;
-         }
-        pl_fspace_r (plotter, MINX, MINY, MAXX, MAXY); /* set coor system */
-       
-        pl_flinewidth_r (plotter, 0.25);    /* set line thickness */
-        pl_pencolorname_r (plotter, "red"); /* use red pen */
-        pl_erase_r (plotter);               /* erase graphics display */
-       //pl_fmove_r (plotter, 600.0, 300.0); /* position the graphics cursor */
-        pl_endpath_r(plotter);
-        drawAxises(plotter, MINX, MINY, MAXX, MAXY, 0.01, "black");
-        drawSegsX(plotter, MINX, MAXX, fabs(MAXY-MINY)/2., fabs((MAXX-MINX)/(MAXX-MINX)), .5, "black");
-        drawSegsY(plotter, MINY, MAXY, fabs(MAXX-MINX)/2.,  fabs((MAXY-MINY)/(MAXY-MINY)), .5, "black");
-        pl_endpath_r(plotter);
+        
+            plPlotter *plotter;
+            plPlotterParams *plotter_params;
+
+           /* set a Plotter parameter */
+           plotter_params = pl_newplparams ();
+           pl_setplparam (plotter_params, "PAGESIZE", "letter");
+
+           /* create a Postscript Plotter that writes to standard output */
+           if ((plotter = pl_newpl_r ("X", stdin, stdout, stderr,
+                                      plotter_params)) == NULL)
+             {
+               fprintf (stderr, "Couldn't create Plotter\n");
+               return 1;
+             }
+
+            if (pl_openpl_r (plotter) < 0)      /* open Plotter */
+             {
+               fprintf (stderr, "Couldn't open Plotter\n");
+               return 1;
+             }
+          
+           pl_fspace_r (plotter, MINX, MINY, MAXX, MAXY); /* set coor system */
+
+            pl_flinewidth_r (plotter, 0.25);    /* set line thickness */
+            pl_pencolorname_r (plotter, "red"); /* use red pen */
+            pl_erase_r (plotter);               /* erase graphics display */
+           //pl_fmove_r (plotter, 600.0, 300.0); /* position the graphics cursor */
+            pl_endpath_r(plotter);
+            drawAxises(plotter, MINX, MINY, MAXX, MAXY, 0.01, "black");
+            drawSegsX(plotter, MINX, MAXX, fabs(MAXY-MINY)/2., fabs((MAXX-MINX)/(MAXX-MINX)), .5, "black");
+            drawSegsY(plotter, MINY, MAXY, fabs(MAXX-MINX)/2.,  fabs((MAXY-MINY)/(MAXY-MINY)), .5, "black");
+            pl_endpath_r(plotter);
         //double h[100], s[100], x[] = {-2. , -1. , .0, 1. , 2.}, y[] = {.0 , .7, 1. , .7, .0};// x[] -- точки графика на оси X y[] -- соответствующие значения на ОУ
         //double S1 = .0, S2 = 10.; //значения производных в двух точках
-        
-        for (int i = 1; i <= n; i++)
+        do
         {
-            h[i] = x[i] - x[i - 1]; //дельта между каждым шагом
-        }
-        progonka(x, y, h, S1, S2);
-       
-        for (int i = 0;i <= n; i++) {
-            printf ("\t s[%d] = %lf", i, s[i]);
-        }
-        pl_pencolorname_r (plotter, "red");
-        printf ("\nТочки графика : ");
-        for (int i = 0; i <= n; i++)
-        {
-
-            pl_fmarker_r(plotter, x[i] + fabs((MAXX-MINX)/2), y[i] + fabs((MAXY-MINY)/2.), 16,  .075);
-            printf ("\tx[%d] =  %lf , y[%d] = %lf", i, x[i], y[i]);
             
-        }
-       
-       
+            for (int i = 1; i <= n; i++)
+            {
+                h[i] = x[i] - x[i - 1]; //дельта между каждым шагом
+            }
+            progonka(x, y, h, S1, S2);
+
+            for (int i = 0;i <= n; i++) {
+                printf ("\t s[%d] = %lf", i, s[i]);
+            }
+            pl_pencolorname_r (plotter, "red");
+            printf ("\nТочки графика : ");
+            for (int i = 0; i <= n; i++)
+            {
+
+                pl_fmarker_r(plotter, x[i] + fabs((MAXX-MINX)/2), y[i] + fabs((MAXY-MINY)/2.), 16,  .075);
+                printf ("\tx[%d] =  %lf , y[%d] = %lf", i, x[i], y[i]);
+            }
+            pl_pencolorname_r (plotter, "blue");
+            printf ("\nТаблица точек кубического сплайна :\n");
+            for (int  i = 1; i <= n; i++)
+            {
+                for (int j = (int)(x[i - 1] * 10000.0); j <= (int)(x[i] * 10000.0); j++ )
+                {
+                    double x1 = 1.0E-4 * (double)j;
+                    double y1 = Si(x, y, s, h, i, x1);
+                    pl_fline_r(plotter, 1.0E-4*(double)(j-1)+fabs((MAXX-MINX)/2), Si(x, y, s, h, i, 1.0E-4*(double)(j-1))+ fabs((MAXY-MINY)/2.), x1+fabs((MAXX-MINX)/2), y1+ fabs((MAXY-MINY)/2.) );
+                    printf ("\ni = %d, x1 = %lf, y1 = %lf ", i, x1, y1);
+                }
+            }
+            printf ("\nn = %d, f ' (x0) = %lf, f ' (xn) = %lf\nВедите новую n,  f ' (x0), f ' (xn) ", n , S1, S2);
+            scanf ("%d%lf%lf", &n, &S1, &S2);
+            pl_pencolorname_r (plotter, "white");
+            pl_fmarker_r(plotter, 0, 0, 16,  100);
+            drawAxises(plotter, MINX, MINY, MAXX, MAXY, 0.01, "black");
+            drawSegsX(plotter, MINX, MAXX, fabs(MAXY-MINY)/2., fabs((MAXX-MINX)/(MAXX-MINX)), .5, "black");
+            drawSegsY(plotter, MINY, MAXY, fabs(MAXX-MINX)/2.,  fabs((MAXY-MINY)/(MAXY-MINY)), .5, "black");
+            pl_endpath_r(plotter);
+        }while ((n!=0) || (S1 != 1488 && S2 != 1488));
+        
        
        
     if (pl_closepl_r (plotter) < 0)     /* close Plotter */
