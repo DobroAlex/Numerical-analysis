@@ -10,6 +10,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "C_Plot.h"
+#define MINX .0
+#define MINY .0
+#define MAXX 4.
+#define MAXY 4.
 double x[100], s1[100], s2[100], h[100], temp[100], y[] = {0.5, 0.8, 0.4, 0.8, 0.5};
 double h1;
 int n = 4;
@@ -19,7 +23,98 @@ void progonka1(double* x, double* y, double* h);
 void progonka2(double* x, double* y, double* h);
 double Si (double x [], double y [], double s [], double h [], int i, double xx);
 int main(int argc, char** argv) {
+            plPlotter *plotter;
+            plPlotterParams *plotter_params;
 
+           /* set a Plotter parameter */
+           plotter_params = pl_newplparams ();
+           pl_setplparam (plotter_params, "PAGESIZE", "letter");
+
+           /* create a Postscript Plotter that writes to standard output */
+           if ((plotter = pl_newpl_r ("X", stdin, stdout, stderr,
+                                      plotter_params)) == NULL)
+             {
+               fprintf (stderr, "Couldn't create Plotter\n");
+               return 1;
+             }
+
+            if (pl_openpl_r (plotter) < 0)      /* open Plotter */
+             {
+               fprintf (stderr, "Couldn't open Plotter\n");
+               return 1;
+             }
+          
+           pl_fspace_r (plotter, MINX, MINY, MAXX, MAXY); /* set coor system */
+
+            pl_flinewidth_r (plotter, 0.25);    /* set line thickness */
+            pl_pencolorname_r (plotter, "red"); /* use red pen */
+            pl_erase_r (plotter);               /* erase graphics display */
+           //pl_fmove_r (plotter, 600.0, 300.0); /* position the graphics cursor */
+            pl_endpath_r(plotter);
+            drawAxises(plotter, MINX, MINY, MAXX, MAXY, 0.01, "black");
+            drawSegsX(plotter, MINX, MAXX, fabs(MAXY-MINY)/2., fabs((MAXX-MINX)/(MAXX-MINX)), .5, "black");
+            drawSegsY(plotter, MINY, MAXY, fabs(MAXX-MINX)/2.,  fabs((MAXY-MINY)/(MAXY-MINY)), .5, "black");
+            pl_endpath_r(plotter);
+    h1 = 2. / n; 
+    for (int i = 0; i <= n ; i++)
+    {
+        x[i] = -1. + i * h1;
+        h[i] = h1;
+    }
+    progonka1(x, y, h);
+    progonka2(x, y, h);
+    for (int  i = 0; i <= n; i++)
+    {
+        printf ("s1[%d] = %lf, s2[%d] = %lf\n", i, s1[i], i , s2[i]);
+    }
+    for (int i = 1; i <= n; i++)
+    {
+        for ( int j2 = (int)(x[i - 1] * 1000.0); j2 <= (int)(x[i] * 1000.0); j2++)
+        {
+            double x12 = 1.0E-5 * (double)j2;
+            double y1 = Si(x, y, s1, h, i, x12);
+            double x12prev = 1.0E-5 * (double)(j2-1);
+            double y1prev = Si(x, y, s1, h, i, x12prev);
+            pl_pencolorname_r (plotter, "blue"); /* use red pen */
+            //pl_fmarker_r(plotter, x[i-1] + fabs((MAXX-MINX)/2), y[i-1] + fabs((MAXY-MINY)/2.), 19,  .15);
+            pl_fmarker_r(plotter, toScreenCoordX(x[i-1], MINX, MAXX), toScreenCoordY(y[i-1], MINY, MAXY), 19, .15);
+            //pl_fline_r(plotter,toScreenCoordX(x12prev, MINX, MAXX), toScreenCoordY(y1prev, MINY, MAXY), toScreenCoordX(x12, MINX, MAXX), toScreenCoordY(y1, MINY, MAXY));
+            //pl_fline_r(plotter, x12prev+ fabs((MAXX-MINX)/2), y1prev+fabs((MAXY-MINY)/2.), x12+ fabs((MAXX-MINX)/2), y1+fabs((MAXY-MINY)/2.));
+        }
+        
+        
+    }
+    printf ("\nStep2:\n");
+    for (int i = 1; i<=n;i++)
+    {
+        for (int j3 = (int)(x[i - 1] * 1000.0); j3 <= (int)(x[i] * 1000.0); j3++)
+        {
+            double x12 = 1.0E-5 * (double)j3;
+            double y1 = Si(x, y, s2, h, i, x12);  
+            double x12prev = 1.0E-5 * (double)(j3-1);
+            double y1prev = Si(x, y, s2, h, i, x12prev); 
+            printf ("\t x12 = %lf, y1 =%lf",x12, y1);
+            pl_pencolorname_r (plotter, "red"); /* use red pen */        
+            //pl_fmarker_r(plotter, x[i-1] + fabs((MAXX-MINX)/2), y[i-1] + fabs((MAXY-MINY)/2.), 16,  .075);
+            pl_fmarker_r(plotter, toScreenCoordX(x[i-1], MINX, MAXX), toScreenCoordY(y[i-1], MINY, MAXY), 16, .075);
+            //pl_fmarker_r(plotter, toScreenCoordX(x12, MINX, MAXX), toScreenCoordY(y[i-1], MINY, MAXY), 1, 0.5);
+            pl_fline_r(plotter, (1.0E-5 * (double)(j3-1)) + fabs(MAXX-MINX)/2., Si(x, y, s2, h, i, x12prev) + fabs (MAXY-MINY)/2., x12 + fabs(MAXX-MINX)/2., y1 + fabs (MAXY-MINY)/2.);
+            
+        }
+        pl_fmarker_r(plotter, toScreenCoordX(x[n], MINX, MAXX), toScreenCoordY(y[n], MINY, MAXY), 16, .075);
+        
+    }
+    if (pl_closepl_r (plotter) < 0)     /* close Plotter */
+      {
+        fprintf (stderr, "Couldn't close Plotter\n");
+        return 1;
+      }
+     
+    if (pl_deletepl_r (plotter) < 0)    /* delete Plotter */
+      {
+        fprintf (stderr, "Couldn't delete Plotter\n");
+        return 1;
+      }
     return 0;
 }
 
@@ -63,12 +158,12 @@ void form2(double* a, double* b, double* c, double* f, double* x, double* y, dou
 }
 void progonka1(double* x, double* y, double* h)
 {
-    double * a = (double *) malloc (100 * sizeof(double));
-    double * b = (double *) malloc (100 * sizeof(double));
-    double * c = (double *) malloc (100 * sizeof(double));
-    double * f = (double *) malloc (100 * sizeof(double));
-    double * p = (double *) malloc (100 * sizeof(double));
-    double * q = (double *) malloc (100 * sizeof(double));
+    double a[100];
+    double b[100];
+    double c[100];
+    double f[100];
+    double p[100];
+    double q[100];
     form1(a, b, c, f, x, y, h);
     printf("\nProgonka1:\n");
     for (int i = 0; i <= n; i++)
@@ -91,12 +186,12 @@ void progonka1(double* x, double* y, double* h)
 }
 void progonka2(double* x, double* y, double* h)
 {
-        double * a = (double *) malloc (100 * sizeof(double));
-        double * b = (double *) malloc (100 * sizeof(double));
-        double * c = (double *) malloc (100 * sizeof(double));
-        double * f = (double *) malloc (100 * sizeof(double));
-        double * p = (double *) malloc (100 * sizeof(double));
-        double * q = (double *) malloc (100 * sizeof(double));
+        double a[100];
+        double b[100];
+        double c[100];
+        double f[100];
+        double p[100];
+        double q[100];
         form2(a, b, c, f, x, y, h);
         printf("\nProgonka2:\n");
         for  (int i = 0;i <= n; i++) {
