@@ -1,5 +1,3 @@
-
-
 /* 
  * File:   Lab4.1
  * Author: DobroAlex
@@ -78,7 +76,7 @@ int main(int argc, char** argv) {
             {
 
                 pl_fmarker_r(plotter, x[i] + fabs((MAXX-MINX)/2), y[i] + fabs((MAXY-MINY)/2.), 16,  .075);
-                printf ("\tx[%d] =  %lf , y[%d] = %lf", i, x[i], y[i]);
+                printf ("\tx[%d] =  %lf , y[%d] = %lf", i, x[i], i,  y[i]);
             }
             pl_pencolorname_r (plotter, "blue");
             printf ("\nТаблица точек кубического сплайна :\n");
@@ -88,6 +86,7 @@ int main(int argc, char** argv) {
                 {
                     double x1 = 1.0E-4 * (double)j;
                     double y1 = Si(x, y, s, h, i, x1);
+                    pl_pencolorname_r (plotter, "blue");
                     pl_fline_r(plotter, 1.0E-4*(double)(j-1)+fabs((MAXX-MINX)/2), Si(x, y, s, h, i, 1.0E-4*(double)(j-1))+ fabs((MAXY-MINY)/2.), x1+fabs((MAXX-MINX)/2), y1+ fabs((MAXY-MINY)/2.) );
                     printf ("\ni = %d, x1 = %lf, y1 = %lf ", i, x1, y1);
                 }
