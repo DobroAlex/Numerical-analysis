@@ -56,10 +56,14 @@ double testFunc(double x)//интегрируемая функция
 }
 double centralRect(double a, double b,  int n) //центральые прямоугльники на отрезке [a;b]  
 {
+#ifdef LOG 
     printf ("__________________________\nCENTRAL RECTS \n__________________________\n");
+#endif
     //int n = round(1./h);
     double h = (b-a)/n;
+#ifdef LOG
     printf ("h = %lf\n", h);
+#endif
     double * yVals = (double *) malloc((n+1) * sizeof(double)); //массив значенйи f(x)
     double * xVals = (double *) malloc((n+1) *sizeof(double)); //массив средних точек
     xVals[0] = a;
@@ -67,7 +71,7 @@ double centralRect(double a, double b,  int n) //центральые прямо
     {
         xVals[i] = xVals[i-1]+h; 
     }
-    
+#ifdef LOG
     for (int i = 0; i <= n; i++)
     {
         printf ("X[%d] = %lf ;", i, xVals[i]);
@@ -77,12 +81,15 @@ double centralRect(double a, double b,  int n) //центральые прямо
     {
         printf ("X[%d] + h/2 = %lf ;", i, xVals[i] + h/2.);
     }
+#endif
     double sum = .0;
     for (int i = 0; i < n ; i++)
     {
         sum += testFunc(xVals[i] + h/2.);
     }
+#ifdef LOG
     printf ("\nSum  = %lf\n\n", sum);
+#endif
     return h *sum;
 
 }
