@@ -9,12 +9,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "C_Plot.h"
+
+#include "C_Plot.h" //если рисуете под Пингвином 
+
 #define MINX .0
 #define MINY .0
 #define MAXX 4.
 #define MAXY 4.
 #define MY_VAR 7
+double h[100], s[100], x[] = {-2. , -1. , .0, 1. , 2.}, y[] = {.0 , .7, 1. , .7, .0};// x[] -- точки графика на оси X y[] -- соответствующие значения на ОУ
+double S1 = .0, S2 = 10.; //значения производных в двух точках
 void progonka (  double x [],   double y [],   double h [],  double  S1, double    S2);// та самая прогонка
 void form (double a[], double  b[], double c [], double f [],  double x [], double y [], double h [], double S1, double S2 );
 int n = 4;
@@ -51,15 +55,27 @@ int main(int argc, char** argv) {
         drawSegsX(plotter, MINX, MAXX, fabs(MAXY-MINY)/2., fabs((MAXX-MINX)/(MAXX-MINX)), .5, "black");
         drawSegsY(plotter, MINY, MAXY, fabs(MAXX-MINX)/2.,  fabs((MAXY-MINY)/(MAXY-MINY)), .5, "black");
         pl_endpath_r(plotter);
-        double h[100], s[100], x[] = {-2. , -1. , .0, 1. , 2.}, y[] = {.0 , .7, 1. , .7, .0};// x[] -- точки графика на оси X y[] -- соответствующие значения на ОУ
-        double S1 = .0, S2 = 10.; //значения производных в двух точках
+        //double h[100], s[100], x[] = {-2. , -1. , .0, 1. , 2.}, y[] = {.0 , .7, 1. , .7, .0};// x[] -- точки графика на оси X y[] -- соответствующие значения на ОУ
+        //double S1 = .0, S2 = 10.; //значения производных в двух точках
         
         for (int i = 1; i <= n; i++)
         {
             h[i] = x[i] - x[i - 1]; //дельта между каждым шагом
         }
-        
+        progonka(x, y, h, S1, S2);
        
+        for (int i = 0;i <= n; i++) {
+            printf ("\t s[%d] = %lf", i, s[i]);
+        }
+        pl_pencolorname_r (plotter, "red");
+        printf ("\nТочки графика : ");
+        for (int i = 0; i <= n; i++)
+        {
+
+            pl_fmarker_r(plotter, x[i] + fabs((MAXX-MINX)/2), y[i] + fabs((MAXY-MINY)/2.), 16,  .075);
+            printf ("\tx[%d] =  %lf , y[%d] = %lf", i, x[i], y[i]);
+            
+        }
        
        
        
@@ -84,12 +100,12 @@ void form (double a[], double  b[], double c [], double f [],  double x [], doub
     b[0] = 2.;
     c[0] = 1.;
     f[0] = 6. * ((y[1] - y[0]) / pow(h[1], 2.) - S1 / pow(h[1], 2.));
-    for (int i = 0; i <  n; i++)
+    for (int i = 1; i <  n; i++)
     {
-        a[i] = h[i];
-        b[i] = 2. * (h[i] + h[i+1]);
-        c[i] = h[i+1];
-        f[i] = 6.0 * ((y[i + 1] - y[i]) / h[i + 1] - (y[i] - y[i - 1]) / h[i]);
+            a[i] = h[i];
+            b[i] = 2.0 * (h[i] + h[i + 1]);
+            c[i] = h[i + 1];
+            f[i] = 6.0 * ((y[i + 1] - y[i]) / h[i + 1] - (y[i] - y[i - 1]) / h[i]);
         
     }
     a[n] = 1.;
@@ -106,15 +122,32 @@ void progonka (  double x [],   double y [],   double h [],  double  S1, double 
     double * f = (double *) malloc(100 * sizeof(double));
     double * p = (double *) malloc(100 * sizeof(double));
     double * q = (double *) malloc(100 * sizeof(double));
-    
-    
-    
-    
+    form(a,b,c,f,x,y,h, S1, S2);
+    for (int i = 0; i <= n; i++)
+    {
+        printf ("\n i = %d , a = %lf , b = %lf, c = %lf, f = %lf", i, a[i], b[i], c[i], f[i]);
+    }
+    p[1] = (- c[0]) / b[0];
+    q[1] = f[0] / b[0];
+    for (int  i = 0; i < n; i++)
+    {
+        double r = b[i] + a[i] * p[i];
+        p[i + 1] = (- c[i]) / r;
+        q[i + 1] = (f[i] - a[i] * q[i]) / r;
+    }
+    s[n] = ((- a[n]) * q[n] + f[n]) / (b[n] + a[n] * p[n]);
+    for (int i = n; i > 0; i--)
+    {
+        s[i - 1] = p[i] * s[i] + q[i];
+    }
     free (a);
     free (b);
     free (c);
     free (f);
     free (p);
     free (q);
-   
+}
+double Si (double x [], double y [], double s [], double h [], int i, double xx)
+{
+    return (s[i - 1] * pow(x[i] - xx, 3.0) + s[i] * pow(xx - x[i - 1], 3.0) + (xx - x[i - 1]) * (6.0 * y[i] - h[i] * h[i] * s[i]) + (x[i] - xx) * (6.0 * y[i - 1] - h[i] * h[i] * s[i - 1])) / (6.0 * h[i]);
 }
