@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
 #endif
     for(int n = 0; n <=3; n++)
     {
-        printf ("\n Trapeze (0, PI/2,%d) = %lf, N-C (0,PI/2,%d) = %lf", n, trapeze(0,M_PI,n), n, newtonCot(0,M_PI,n));
+        printf ("\n Trapeze (0, PI/2,%d) = %lf, N-C (0,PI/2,%d) = %lf", n, trapeze(0,M_PI/2,n), n, newtonCot(0,M_PI/2,n));
     }
     return (0);
 }
