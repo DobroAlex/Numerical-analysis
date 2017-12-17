@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
             pl_endpath_r(plotter);
         //double h[100], s[100], x[] = {-2. , -1. , .0, 1. , 2.}, y[] = {.0 , .7, 1. , .7, .0};// x[] -- точки графика на оси X y[] -- соответствующие значения на ОУ
         //double S1 = .0, S2 = 10.; //значения производных в двух точках
-        do
+            do
         {
             
             for (int i = 1; i <= n; i++)
@@ -99,8 +99,8 @@ int main(int argc, char** argv) {
             drawAxises(plotter, MINX, MINY, MAXX, MAXY, 0.01, "black");
             drawSegsX(plotter, MINX, MAXX, fabs(MAXY-MINY)/2., fabs((MAXX-MINX)/(MAXX-MINX)), .5, "black");
             drawSegsY(plotter, MINY, MAXY, fabs(MAXX-MINX)/2.,  fabs((MAXY-MINY)/(MAXY-MINY)), .5, "black");
-            pl_endpath_r(plotter);
-        }while ((n!=0) || (S1 != 1488 && S2 != 1488));
+            
+        }while (n != 0);
         
        
        
