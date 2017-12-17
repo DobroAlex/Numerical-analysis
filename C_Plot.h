@@ -78,7 +78,14 @@ void drawSegsY (plPlotter * plotter, double yStart, double yEnd, double x, doubl
       }
       pl_endpath_r(plotter);
   }
-
+double toScreenCoordX(const double x, double minX, double maxX) //возвращает экранную координату X
+{
+    return x + fabs((maxX-minX)/2.);
+}
+double toScreenCoordY(const double y, double minY, double maxY) //возвращает экранную координату Y
+{
+    return y + fabs((maxY-minY)/2.);
+}
 #ifdef __cplusplus
 }
 #endif
