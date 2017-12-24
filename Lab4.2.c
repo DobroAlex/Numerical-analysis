@@ -1,28 +1,30 @@
-
-
 /* 
- * File:   Lab4.2.c
- * Author: GitHub@DobroAlex
+ * File:   Lab4.1
+ * Author: DobroAlex
  *
- * Created on 17 декабря 2017 г., 18:07
+ * Created on 26 ноября 2017 г., 20:03
  */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "C_Plot.h"
+
+#include "C_Plot.h" //если рисуете под Пингвином 
+
 #define MINX .0
 #define MINY .0
 #define MAXX 4.
 #define MAXY 4.
-double x[100], s1[100], s2[100], h[100], temp[100], y[] = {0.5, 0.8, 0.4, 0.8, 0.5};
-double h1;
-int n = 4;
-void form1(double* a, double* b, double* c, double* f, double* x, double* y, double* h);
-void form2(double* a, double* b, double* c, double* f, double* x, double* y, double* h);
-void progonka1(double* x, double* y, double* h);
-void progonka2(double* x, double* y, double* h);
+#define MY_VAR 7
+double h[100], s[100], x[] = {-2. , -1. , .0, 1. , 2.}, y[] = {.0 , .7, 1. , .7, .0};// x[] -- точки графика на оси X y[] -- соответствующие значения на ОУ
+double S1 = 10., S2 = -10.; //значения производных в двух точках
+const double S1Nature = .0, S2Nature = .0; //при естественном сплайне полагаем значения производных = 0 
+void progonka (  double x [],   double y [],   double h [],  double  S1, double    S2);// та самая прогонка
+void form (double a[], double  b[], double c [], double f [],  double x [], double y [], double h [], double S1, double S2 );
 double Si (double x [], double y [], double s [], double h [], int i, double xx);
+int n = 4;
+
 int main(int argc, char** argv) {
+        
             plPlotter *plotter;
             plPlotterParams *plotter_params;
 
@@ -55,55 +57,73 @@ int main(int argc, char** argv) {
             drawSegsX(plotter, MINX, MAXX, fabs(MAXY-MINY)/2., fabs((MAXX-MINX)/(MAXX-MINX)), .5, "black");
             drawSegsY(plotter, MINY, MAXY, fabs(MAXX-MINX)/2.,  fabs((MAXY-MINY)/(MAXY-MINY)), .5, "black");
             pl_endpath_r(plotter);
-    h1 = 2. / n; 
-    for (int i = 0; i <= n ; i++)
-    {
-        x[i] = -1. + i * h1;
-        h[i] = h1;
-    }
-    progonka1(x, y, h);
-    progonka2(x, y, h);
-    for (int  i = 0; i <= n; i++)
-    {
-        printf ("s1[%d] = %lf, s2[%d] = %lf\n", i, s1[i], i , s2[i]);
-    }
-    for (int i = 1; i <= n; i++)
-    {
-        for ( int j2 = (int)(x[i - 1] * 1000.0); j2 <= (int)(x[i] * 1000.0); j2++)
-        {
-            double x12 = 1.0E-5 * (double)j2;
-            double y1 = Si(x, y, s1, h, i, x12);
-            double x12prev = 1.0E-5 * (double)(j2-1);
-            double y1prev = Si(x, y, s1, h, i, x12prev);
-            pl_pencolorname_r (plotter, "blue"); /* use red pen */
-            //pl_fmarker_r(plotter, x[i-1] + fabs((MAXX-MINX)/2), y[i-1] + fabs((MAXY-MINY)/2.), 19,  .15);
-            pl_fmarker_r(plotter, toScreenCoordX(x[i-1], MINX, MAXX), toScreenCoordY(y[i-1], MINY, MAXY), 19, .15);
-            //pl_fline_r(plotter,toScreenCoordX(x12prev, MINX, MAXX), toScreenCoordY(y1prev, MINY, MAXY), toScreenCoordX(x12, MINX, MAXX), toScreenCoordY(y1, MINY, MAXY));
-            //pl_fline_r(plotter, x12prev+ fabs((MAXX-MINX)/2), y1prev+fabs((MAXY-MINY)/2.), x12+ fabs((MAXX-MINX)/2), y1+fabs((MAXY-MINY)/2.));
-        }
-        
-        
-    }
-    printf ("\nStep2:\n");
-    for (int i = 1; i<=n;i++)
-    {
-        for (int j3 = (int)(x[i - 1] * 1000.0); j3 <= (int)(x[i] * 1000.0); j3++)
-        {
-            double x12 = 1.0E-5 * (double)j3;
-            double y1 = Si(x, y, s2, h, i, x12);  
-            double x12prev = 1.0E-5 * (double)(j3-1);
-            double y1prev = Si(x, y, s2, h, i, x12prev); 
-            printf ("\t x12 = %lf, y1 =%lf",x12, y1);
-            pl_pencolorname_r (plotter, "red"); /* use red pen */        
-            //pl_fmarker_r(plotter, x[i-1] + fabs((MAXX-MINX)/2), y[i-1] + fabs((MAXY-MINY)/2.), 16,  .075);
-            pl_fmarker_r(plotter, toScreenCoordX(x[i-1], MINX, MAXX), toScreenCoordY(y[i-1], MINY, MAXY), 16, .075);
-            //pl_fmarker_r(plotter, toScreenCoordX(x12, MINX, MAXX), toScreenCoordY(y[i-1], MINY, MAXY), 1, 0.5);
-            pl_fline_r(plotter, (1.0E-5 * (double)(j3-1)) + fabs(MAXX-MINX)/2., Si(x, y, s2, h, i, x12prev) + fabs (MAXY-MINY)/2., x12 + fabs(MAXX-MINX)/2., y1 + fabs (MAXY-MINY)/2.);
+        //double h[100], s[100], x[] = {-2. , -1. , .0, 1. , 2.}, y[] = {.0 , .7, 1. , .7, .0};// x[] -- точки графика на оси X y[] -- соответствующие значения на ОУ
+        //double S1 = .0, S2 = 10.; //значения производных в двух точках
+
             
-        }
-        pl_fmarker_r(plotter, toScreenCoordX(x[n], MINX, MAXX), toScreenCoordY(y[n], MINY, MAXY), 16, .075);
+            for (int i = 1; i <= n; i++)
+            {
+                h[i] = x[i] - x[i - 1]; //дельта между каждым шагом
+            }
+            progonka(x, y, h, 0, 0);
+
+            for (int i = 0;i <= n; i++) {
+                printf ("\t s[%d] = %lf", i, s[i]);
+            }
+            pl_pencolorname_r (plotter, "red");
+            printf ("\nТочки графика : ");
+            for (int i = 0; i <= n; i++)
+            {
+
+                pl_fmarker_r(plotter, x[i] + fabs((MAXX-MINX)/2), y[i] + fabs((MAXY-MINY)/2.), 16,  .075);
+                printf ("\tx[%d] =  %lf , y[%d] = %lf", i, x[i], i,  y[i]);
+            }
+            pl_pencolorname_r (plotter, "blue");
+            printf ("\nТаблица точек кубического сплайна :\n");
+            for (int  i = 1; i <= n; i++)
+            {
+                for (int j = (int)(x[i - 1] * 10000.0); j <= (int)(x[i] * 10000.0); j++ )
+                {
+                    double x1 = 1.0E-4 * (double)j;
+                    double y1 = Si(x, y, s, h, i, x1);
+                    pl_pencolorname_r (plotter, "green");
+                    pl_fline_r(plotter, 1.0E-4*(double)(j-1)+fabs((MAXX-MINX)/2), Si(x, y, s, h, i, 1.0E-4*(double)(j-1))+ fabs((MAXY-MINY)/2.), x1+fabs((MAXX-MINX)/2), y1+ fabs((MAXY-MINY)/2.) );
+                    printf ("\ni = %d, x1 = %lf, y1 = %lf ", i, x1, y1);
+                }
+            }
+            for (int i = 1; i <= n; i++)
+            {
+                h[i] = x[i] - x[i - 1]; //дельта между каждым шагом
+            }
+            progonka(x, y, h, S1, S2);
+
+            for (int i = 0;i <= n; i++) {
+                printf ("\t s[%d] = %lf", i, s[i]);
+            }
+            pl_pencolorname_r (plotter, "red");
+            printf ("\nТочки графика : ");
+            for (int i = 0; i <= n; i++)
+            {
+
+                pl_fmarker_r(plotter, x[i] + fabs((MAXX-MINX)/2), y[i] + fabs((MAXY-MINY)/2.), 16,  .075);
+                printf ("\tx[%d] =  %lf , y[%d] = %lf", i, x[i], i,  y[i]);
+            }
+            pl_pencolorname_r (plotter, "blue");
+            printf ("\nТаблица точек кубического сплайна :\n");
+            for (int  i = 1; i <= n; i++)
+            {
+                for (int j = (int)(x[i - 1] * 10000.0); j <= (int)(x[i] * 10000.0); j++ )
+                {
+                    double x1 = 1.0E-4 * (double)j;
+                    double y1 = Si(x, y, s, h, i, x1);
+                    pl_pencolorname_r (plotter, "blue");
+                    pl_fline_r(plotter, 1.0E-4*(double)(j-1)+fabs((MAXX-MINX)/2), Si(x, y, s, h, i, 1.0E-4*(double)(j-1))+ fabs((MAXY-MINY)/2.), x1+fabs((MAXX-MINX)/2), y1+ fabs((MAXY-MINY)/2.) );
+                    printf ("\ni = %d, x1 = %lf, y1 = %lf ", i, x1, y1);
+                }
+            }
         
-    }
+       
+       
     if (pl_closepl_r (plotter) < 0)     /* close Plotter */
       {
         fprintf (stderr, "Couldn't close Plotter\n");
@@ -115,48 +135,30 @@ int main(int argc, char** argv) {
         fprintf (stderr, "Couldn't delete Plotter\n");
         return 1;
       }
-    return 0;
+       return (0);
 }
 
+void form (double a[], double  b[], double c [], double f [],  double x [], double y [], double h [], double S1, double S2 )
+{
+    a[0] = .0;
+    b[0] = 2.;
+    c[0] = 1.;
+    f[0] = 6. * ((y[1] - y[0]) / pow(h[1], 2.) - S1 / pow(h[1], 2.));
+    for (int i = 1; i <  n; i++)
+    {
+            a[i] = h[i];
+            b[i] = 2.0 * (h[i] + h[i + 1]);
+            c[i] = h[i + 1];
+            f[i] = 6.0 * ((y[i + 1] - y[i]) / h[i + 1] - (y[i] - y[i - 1]) / h[i]);
+        
+    }
+    a[n] = 1.;
+    b[n] = 2.;
+    c[n] = .0;
+    f[n] = -6. * ((y[n] - y[n - 1]) / pow(h[n], 2.0) - S2 / pow(h[n], 2.0));
+}
 
-void form1(double* a, double* b, double* c, double* f, double* x, double* y, double* h)
-{
-        a[0] = .0;
-        b[0] = .0;
-        c[0] = -1.;
-        f[0] = .0;
-        for (int i = 1;i < n; i++)
-        {
-            a[i] = h[i];
-            b[i] = 2. * (h[i] + h[i + 1]);
-            c[i] = h[i + 1];
-            f[i] = 6. * ((y[i + 1] - y[i]) / h[i + 1] - (y[i] - y[i - 1]) / h[i]);
-            ++i;
-        }
-        a[n] = 1.;
-        b[n] = -1.;
-        c[n] = .0;
-        f[n] = .0;
-}
-void form2(double* a, double* b, double* c, double* f, double* x, double* y, double* h)
-{
-        a[1] = .0;
-        b[1] = 2. * (h[1] + h[2]);
-        c[1] = h[2];
-        f[1] = 6. * ((y[2] - y[1]) / h[2] - (y[1] - y[0]) / h[1]);
-        for (int i = 2; i < n - 1; i++)
-        {
-            a[i] = h[i];
-            b[i] = 2. * (h[i] + h[i + 1]);
-            c[i] = h[i + 1];
-            f[i] = 6. * ((y[i + 1] - y[i]) / h[i + 1] - (y[i] - y[i - 1]) / h[i]);
-        }
-        a[n - 1] = h[n - 1];
-        b[n - 1] = 2. * (h[n - 1] + h[n]);
-        c[n - 1] = .0;
-        f[n - 1] = 6. * ((y[n] - y[n - 1]) / h[n] - (y[n - 1] - y[n - 2]) / h[n - 1]);
-}
-void progonka1(double* x, double* y, double* h)
+void progonka (  double x [],   double y [],   double h [],  double  S1, double    S2)// та самая прогонка Важно понять, что при использовании массива в качестве аргумента функции происходит передача в функцию его адреса. Это означает, что код внутри функции действует и может изменять настоящее значение массива, используемого при вызове.
 {
     double a[100];
     double b[100];
@@ -164,56 +166,25 @@ void progonka1(double* x, double* y, double* h)
     double f[100];
     double p[100];
     double q[100];
-    form1(a, b, c, f, x, y, h);
-    printf("\nProgonka1:\n");
+    form(a,b,c,f,x,y,h, S1, S2);
     for (int i = 0; i <= n; i++)
     {
-        printf("i = %d, a[%d] = %lf, b[%d] = %lf, c[%d] = %lf, f[%d]  = %lf\t", i , i , a[i], i, b[i], i, c[i], i, f[i]);
+        printf ("\n i = %d , a = %lf , b = %lf, c = %lf, f = %lf", i, a[i], b[i], c[i], f[i]);
     }
     p[1] = (- c[0]) / b[0];
     q[1] = f[0] / b[0];
-    for (int i = 1; i < n; i++)
+    for (int  i = 0; i < n; i++)
     {
         double r = b[i] + a[i] * p[i];
         p[i + 1] = (- c[i]) / r;
         q[i + 1] = (f[i] - a[i] * q[i]) / r;
     }
-     s1[n] = ((- a[n]) * q[n] + f[n]) / (b[n] + a[n] * p[n]);
-     for (int i = n; i > 0; i--)
-     {
-         s1[i - 1] = p[i] * s1[i] + q[i];
-     }
-}
-void progonka2(double* x, double* y, double* h)
-{
-        double a[100];
-        double b[100];
-        double c[100];
-        double f[100];
-        double p[100];
-        double q[100];
-        form2(a, b, c, f, x, y, h);
-        printf("\nProgonka2:\n");
-        for  (int i = 0;i <= n; i++) {
-            
-            printf("i = %d, a[%d] = %lf, b[%d] = %lf, c[%d] = %lf, f[%d]  = %lf\t", i , i , a[i], i, b[i], i, c[i], i, f[i]);
-        }
-        p[2] = (- c[1]) / b[1];
-        q[2] = f[1] / b[1];
-        
-        for (int i  = 2;i < n - 1; i++) {
-            double r = b[i] + a[i] * p[i];
-            p[i + 1] = (- c[i]) / r;
-            q[i + 1] = (f[i] - a[i] * q[i]) / r;
-        }
-        s2[n] = 0.0;
-        s2[n - 1] = ((- a[n - 1]) * q[n - 1] + f[n - 1]) / (b[n - 1] + a[n - 1] * p[n - 1]);
-        for  (int i = n - 1;i > 0; i--)
-        {
-            s2[i - 1] = p[i] * s2[i] + q[i];
-            --i;
-        }
-        s2[0] = .0;
+    s[n] = ((- a[n]) * q[n] + f[n]) / (b[n] + a[n] * p[n]);
+    for (int i = n; i > 0; i--)
+    {
+        s[i - 1] = p[i] * s[i] + q[i];
+    }
+
 }
 double Si (double x [], double y [], double s [], double h [], int i, double xx)
 {
