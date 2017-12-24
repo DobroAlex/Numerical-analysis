@@ -70,23 +70,32 @@ int main(int argc, char** argv) {
             gauss1(x, y, n1);
             gauss2(x, y, n2);
             nelin(x, y);
-
+            double sum1 = 0.0;
+            double sum2 = 0.0;
+            double sum3 = 0.0;
+            int i2 = 0;
+            while (i2 < N) {
+            sum1 += pow(y[i2] - f1(x[i2], n1), 2.0);
+            sum2 += pow(y[i2] - f2(x[i2], n2), 2.0);
+            sum3 += pow(y[i2] - f3(x[i2]), 2.0);
+            ++i2;
+        }
             pl_pencolorname_r (plotter, "blue");
-            printf ("\nТаблица точек линейной функции:\n");
+            printf ("\nТаблица точек линейной функции S = %lf:\n",sum1);
             for (int i = 0; i < N;i++)
             {
                 pl_fmarker_r(plotter, x[i]+fabs(MAXX-MINX)/2., f1(x[i],n1)+fabs(MAXY-MINY)/2., 31, .5/2.);
                 printf (" (%lf;%lf)   ", x[i], f1(x[i],n1) );
             }
             pl_pencolorname_r (plotter, "red");
-            printf ("\nТаблица точек квадратичной функции:\n");
+            printf ("\nТаблица точек квадратичной функции S =  %lf:\n", sum2);
             for (int i = 0; i < N;i++)
             {
                 pl_fmarker_r(plotter, x[i]+fabs(MAXX-MINX)/2., f2(x[i],n2)+fabs(MAXY-MINY)/2., 31, .5/2.);
                 printf (" (%lf;%lf)   ", x[i], f2(x[i],n2) );
             }
             pl_pencolorname_r (plotter, "green");
-            printf ("\nТаблица точек степенной функции:\n");
+            printf ("\nТаблица точек степенной функции S = %lf :\n", sum3);
             for (int i = 0; i < N;i++)
             {
                 pl_fmarker_r(plotter, x[i]+fabs(MAXX-MINX)/2., f3(x[i])+fabs(MAXY-MINY)/2., 31, .5/2.);
