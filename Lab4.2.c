@@ -16,7 +16,7 @@
 #define MAXY 4.
 #define MY_VAR 7
 double h[100], s[100], x[] = {-2. , -1. , .0, 1. , 2.}, y[] = {.0 , .7, 1. , .7, .0};// x[] -- точки графика на оси X y[] -- соответствующие значения на ОУ
-double S1 = 10., S2 = -10.; //значения производных в двух точках
+double S1 = .0, S2 = 0.; //значения производных в двух точках
 const double S1Nature = .0, S2Nature = .0; //при естественном сплайне полагаем значения производных = 0 
 void progonka (  double x [],   double y [],   double h [],  double  S1, double    S2);// та самая прогонка
 void form (double a[], double  b[], double c [], double f [],  double x [], double y [], double h [], double S1, double S2 );
@@ -96,7 +96,8 @@ int main(int argc, char** argv) {
                 h[i] = x[i] - x[i - 1]; //дельта между каждым шагом
             }
             progonka(x, y, h, S1, S2);
-
+            s[0] = s[1];
+            s[n-1] = s[n];
             for (int i = 0;i <= n; i++) {
                 printf ("\t s[%d] = %lf", i, s[i]);
             }
@@ -184,7 +185,6 @@ void progonka (  double x [],   double y [],   double h [],  double  S1, double 
     {
         s[i - 1] = p[i] * s[i] + q[i];
     }
-
 }
 double Si (double x [], double y [], double s [], double h [], int i, double xx)
 {
