@@ -1,126 +1,205 @@
-using System;
+﻿using System;
 
-namespace Lab7Task1
+namespace Lab8Task1
 {
-	class MainClass
-	{
-		public static void Main (string[] args)
-		{
+    class MainClass
+    {
+        public static void Main(string[] args)
+        {
+            Console.WriteLine("Input calcuation accuracy :");
+            double EPS = double.Parse(Console.ReadLine());
+            int n = 0;
+            Console.WriteLine("Input square matrix size :");
+            try
+            {
+                n = int.Parse(Console.ReadLine());
+                if (n <= 0 || EPS <= 0 || EPS < double.Epsilon)
+                {
+                    throw new System.ArgumentException("size or accuracy  can't be  <= 0");
+                }
+            }
+            catch (ArgumentNullException)
+            {
+                Console.WriteLine("\nSize or accuracy is  null");
+                Environment.Exit(-1);
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("\nWrong input format");
+                Environment.Exit(-2);
+            }
+            catch (OverflowException)
+            {
+                Console.WriteLine("\nValue is TOO big (Like my dick ;-])");
+                Environment.Exit(-3);
+            }
+            catch (ArgumentException)
+            {
+                Console.WriteLine("size or accuracy  can't be  <= 0");
+                Environment.Exit(-4);
+            }
+            double[,] A = new double[n, n];
+            double[] B = new double[n];
+            double[,] C = new double[n, n];
+            double[] D = new double[n];
+            double[] Xk1 = new double[n];
+            Console.WriteLine("Input matrix A :\n");
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
 
-		}
-	}
-	public static  class GaussianSolver
-	{
-		public static double formatDouble(double d, int dz) {
-			double dd = Math.Pow(10.0, dz);
-			return (double)Math.Round(d * dd) / dd;
-		}
-		public static double[] gauss(double[,] m, int n) {
-			GaussianSolver.direct(m, n);
-			return GaussianSolver.reverse(m, n);
-		}
-		public static double[] reverse(double[,] m, int n) {
-			double[] q = new double[n];
-			q[n - 1] = m[n - 1,n] / m[n - 1, n - 1];
-			int i = n - 2;
-			while (i >= 0) {
-				double sum = m[i,n];
-				int k = i + 1;
-				while (k < n) {
-					sum -= m[i, k] * q[k];
-					++k;
-				}
-				q[i] = sum / m[i, i];
-				--i;
-			}
-			return q; 
-		}
-		public static double findMain(double[,] m, int n, int i) {
-			double[] temp = new double[n + 1];
-			int l = i;
-			int k = i;
-			while (k < n) {
-				if (Math.Abs(m[l,i]) < Math.Abs(m[k,i])) {
-					l = k;
-				}
-				++k;
-			}
-			if (l != i) {
-				k = 0;
-				while (k <= n) {
-					temp[k] = m[l,k];
-					m[l,k] = m[i,k];
-					m[i,k] = temp[k];
-					++k;
-				}
-			}
-			return m[l,i];
-		}
-		public static void direct(double[,] m, int n) {
-			int i = 0;
-			while (i < n) {
-				GaussianSolver.findMain(m, n, i);
-				if (m[i,i] == 0.0) break;
-				int k = i + 1;
-				while (k < n) {
-					double d = m[k,i] / m[i,i];
-					int j = i;
-					while (j <= n) {
-						m[k,j] = m[k,j] - d * m[i,j];
-						++j;
-					}
-					++k;
-				}
-				//this.print(i + 1, this.formatDouble(this.findmain(m, n, i), 2), m, n);
-				++i;
-			}
-		}
-		public static int rank(double[,] m, int n)
-		{
-			double[,] r = new double[n, n + 1];
-			int b = 0;
-			while (b < n) {
-				int h = 0;
-				while (h < n + 1) {
-					r[b,h] = m[b,h];
-					++h;
-				}
-				++b;
-			}
-			int i = 0;
-			while (i < n) {
-				GaussianSolver.findMain(r, n, i);
-				if (r[i,i] == 0.0) break;
-				int j = i + 1;
-				while (j < n) {
-					double d = r[j,i] / r[i,i];
-					int k = i;
-					while (k <= n) {
-						r[j,k] = r[j,k] - d * r[i,k];
-						++k;
-					}
-					++j;
-				}
-				++i;
-			}
-			int rang = 0;
-			int i2 = 0;
-			while (i2 < n) {
-				int k = 0;
-				int j = 0;
-				while (j < n) {
-					if (r[i2,j] == 0.0) {
-						++k;
-					}
-					++j;
-				}
-				if (k != n) {
-					++rang;
-				}
-				++i2;
-			}
-			return rang;
-		}
+                    A[i, j] = double.Parse(Console.ReadLine());
+                }
+            }
+            Console.WriteLine("Your matrix A:\n");
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    Console.Write(A[i, j]);
+                    Console.Write(' ');
+                }
+                Console.Write('\n');
+            }
+            Console.WriteLine("\nInput vector (right) B:\n");
+            for (int i = 0; i < B.Length; i++)
+            {
+                B[i] = double.Parse(Console.ReadLine());
+            }
+            Console.WriteLine("\nYour vector B:\n");
+            for (int i = 0; i < B.Length; i++)
+            {
+                Console.Write(B[i]);
+                Console.Write('\n');
+            }
+            if (IsDiagonaleDominate(A, n))
+            {
+                Console.WriteLine("The condition of diagonal dominance is fulfilled.\nCalculating matrix C and vector D:\n");
+                C = FormMatrixC(A, n);
+                D = FormVectorD(A, B);
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        Console.Write(A[i,j]);
+                        Console.WriteLine("  ");
+                    }
+                    Console.Write('\n');
+                }
+                Console.Write('D');
+                for (int i = 0; i < D.Length;i++)
+                {
+                    Console.Write(D[i]);
+                    Console.Write('\n');
+                }
+                Xk1 = SimpleIteration(C, D, EPS);
+                for (int i = 0; i < Xk1.Length;i++)
+                {
+                    Console.Write(Xk1[i]);
+                    Console.Write(' ');
+                }
+            }
+            else 
+            {
+                Console.WriteLine("The condition of diagonal dominance is NOT fulfilled, Aborting");
+            }
+        }
+        public  static double [] SimpleIteration (double [,] c, double [] d,  double eps)
+        {
+            double[] xk = new double[d.Length];
+            xk[d.Length - 1] = 1.0;
+            double[] xk1 = new double[d.Length];
+            xk1 = VertSum(FormSomeRealShit(c, xk ), d);
+            int iters = 1;
+            while (Norma(xk1,xk) > eps)
+            {
+                xk = xk1;
+                xk1 = VertSum(FormSomeRealShit(c, xk), d);
+                iters++;
+            }
+            Console.WriteLine("\nIt took ");
+            Console.Write(iters);
+            Console.WriteLine(" iterations\n.");
+            return xk1;
+        }
+        public static double[] VertSum(double[] a, double[] b)
+        {
+            double[] c = new double[a.Length];
+            for (int i = 0; i < a.Length; i++)
+            {
+                c[i] = a[i] + b[i];
+            }
+            return c;
+        }
+        public static bool IsDiagonaleDominate(double[,] A, int n) //проверка на диагональное преобладание, всё по заветам методички Косовой <3
+        {
+            int c = 0;
+            for (int i = 0; i < n; i++)
+            {
+                double sum = .0;
+                for (int j = 0; j < n; j++)
+                {
+                    if (i != j)
+                    {
+                        sum += Math.Abs(A[i, j]);
+                    }
+                }
+                if (Math.Abs(A[i, i]) > sum)
+                {
+                    c++;
+                }
 
-	}
+            }
+            if (c == n)
+            {
+                return true;
+            }
+            return false;
+        }
+        public static double Norma(double[] a, double[] b) //вычисление нормы, очевидно
+        {
+            double sum = .0;
+            for (int i = 0; i < a.Length; i++)
+            {
+                sum += Math.Pow(Math.Abs(a[i] - b[i]), 2.0); // модуль разности в квадрате
+            }
+            return Math.Sqrt(sum);
+        }
+        public static double[,] FormMatrixC(double[,] A, int n) //создание матрицы C
+        {
+            double[,] m = new double[n, n];
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    m[i, j] = i == j ? 0.0 : (-A[i, j]) / A[i, i];
+                }
+            }
+            return m;
+        }
+        public static double[] FormVectorD(double[,] A, double[] b)
+        {
+            double[] v = new double[b.Length];
+            for (int i = 0; i < b.Length;i++)
+            {
+                v[i] = b[i] / A[i, i]; //эл-ты с главной диагонали м-цы 
+            }
+            return v;
+        }
+        public static double [  ] FormSomeRealShit(double [,] A, double [] b) //mumnogv в оригинальных сырцах. Пока не улавливаю
+        {
+            double[] c = new double[b.Length];
+            for (int i = 0; i < b.Length; i++)
+            {
+                for (int j = 0; j < b.Length; j++)
+                {
+                    double[] arrD = c; // arrD теперь хранит указатель на с. Разобраться, нужно это или скопировать независимое значение
+                    arrD[i] = arrD[i] + A[i, j] * b[j];
+                }
+            }
+            return c;
+        }
+    }
 }
+
