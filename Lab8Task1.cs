@@ -1,5 +1,5 @@
 ﻿using System;
-
+ 
 namespace Lab8Task1
 {
     class MainClass
