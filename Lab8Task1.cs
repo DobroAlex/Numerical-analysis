@@ -9,8 +9,8 @@ namespace Lab8Task1
         {
             Console.WriteLine("Input calcuation accuracy :");
             double EPS = Double.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);   //корректное чтение чисел с точкой, а не с запятой
-            Console.Write(EPS);
-            Console.Write('\n');
+            Console.WriteLine(EPS + "\n");
+
             int n = 0;
             Console.WriteLine("Input square matrix size :");
             try
@@ -60,10 +60,10 @@ namespace Lab8Task1
             {
                 for (int j = 0; j < n; j++)
                 {
-                    Console.Write(A[i, j]);
-                    Console.Write(' ');
+                    Console.WriteLine(A[i, j]+" ");
+
                 }
-                Console.Write('\n');
+                Console.Write("\n");
             }
             Console.WriteLine("\nInput vector (right) B:\n");
             for (int i = 0; i < B.Length; i++)
@@ -73,8 +73,7 @@ namespace Lab8Task1
             Console.WriteLine("\nYour vector B:\n");
             for (int i = 0; i < B.Length; i++)
             {
-                Console.Write(B[i]);
-                Console.Write('\n');
+                Console.WriteLine(B[i]+"\n");
             }
             if (IsDiagonaleDominate(A, n))
             {
@@ -86,21 +85,20 @@ namespace Lab8Task1
                     for (int j = 0; j < n; j++)
                     {
                         Console.Write(C[i,j]);
-                        Console.Write('\t');
+                        Console.Write(' ');
                     }
-                    Console.Write('\n');
+                    Console.Write("\n");
                 }
                 Console.WriteLine("vector D:\n");
                 for (int i = 0; i < D.Length;i++)
                 {
-                    Console.Write(D[i]);
-                    Console.Write('\n');
+                    Console.WriteLine(D[i]+"\n");
+
                 }
                 Xk1 = SimpleIteration(C, D, EPS);
                 for (int i = 0; i < Xk1.Length;i++)
                 {
-                    Console.Write(Xk1[i]);
-                    Console.Write(' ');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+                    Console.WriteLine(Xk1[i]+"\n");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
                 }
             }
             else 
@@ -125,11 +123,12 @@ namespace Lab8Task1
             }
             stopWatch.Stop();
 
-            Console.WriteLine("\nIt took ");
+            /*Console.WriteLine("\nIt took ");
             Console.Write(iters);
             Console.WriteLine(" iterations and ");
             Console.Write(stopWatch.ElapsedMilliseconds);
-            Console.WriteLine(" miliseconds");
+            Console.WriteLine(" miliseconds");*/
+            Console.WriteLine("\n It took" + iters + " iterations and " + stopWatch.Elapsed + " miliseconds\n");
             return xk1;
         }
         public static double[] VertSum(double[] a, double[] b)
