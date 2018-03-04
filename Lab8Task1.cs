@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Diagnostics;
+using System.Threading;
 namespace Lab8Task1
 {
     class MainClass
@@ -7,8 +8,9 @@ namespace Lab8Task1
         public static void Main(string[] args)
         {
             Console.WriteLine("Input calcuation accuracy :");
-            double EPS = Double.Parse(Console.ReadLine());
+            double EPS = Double.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);   //корректное чтение чисел с точкой, а не с запятой
             Console.Write(EPS);
+            Console.Write('\n');
             int n = 0;
             Console.WriteLine("Input square matrix size :");
             try
@@ -50,7 +52,7 @@ namespace Lab8Task1
                 for (int j = 0; j < n; j++)
                 {
 
-                    A[i, j] = Double.Parse(Console.ReadLine());
+                    A[i, j] = Double.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
             Console.WriteLine("Your matrix A:\n");
@@ -66,7 +68,7 @@ namespace Lab8Task1
             Console.WriteLine("\nInput vector (right) B:\n");
             for (int i = 0; i < B.Length; i++)
             {
-                B[i] = double.Parse(Console.ReadLine());
+                B[i] = Double.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
             }
             Console.WriteLine("\nYour vector B:\n");
             for (int i = 0; i < B.Length; i++)
@@ -83,7 +85,7 @@ namespace Lab8Task1
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        Console.Write(A[i,j]);
+                        Console.Write(C[i,j]);
                         Console.Write('\t');
                     }
                     Console.Write('\n');
@@ -113,15 +115,21 @@ namespace Lab8Task1
             double[] xk1 = new double[d.Length];
             xk1 = VertSum(FormSomeRealShit(c, xk ), d);
             int iters = 1;
+            Stopwatch stopWatch = new Stopwatch();
+            stopWatch.Start();
             while (Norma(xk1,xk) > eps)
             {
                 xk = xk1;
                 xk1 = VertSum(FormSomeRealShit(c, xk), d);
                 iters++;
             }
+            stopWatch.Stop();
+
             Console.WriteLine("\nIt took ");
             Console.Write(iters);
-            Console.WriteLine(" iterations\n.");
+            Console.WriteLine(" iterations and ");
+            Console.Write(stopWatch.ElapsedMilliseconds);
+            Console.WriteLine(" miliseconds");
             return xk1;
         }
         public static double[] VertSum(double[] a, double[] b)
