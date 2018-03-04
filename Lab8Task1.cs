@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
+
 namespace Lab8Task1
 {
     class MainClass
