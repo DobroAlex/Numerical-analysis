@@ -1,5 +1,5 @@
 ﻿using System;
- 
+
 namespace Lab8Task1
 {
     class MainClass
@@ -7,7 +7,8 @@ namespace Lab8Task1
         public static void Main(string[] args)
         {
             Console.WriteLine("Input calcuation accuracy :");
-            double EPS = double.Parse(Console.ReadLine());
+            double EPS = Double.Parse(Console.ReadLine());
+            Console.Write(EPS);
             int n = 0;
             Console.WriteLine("Input square matrix size :");
             try
@@ -49,7 +50,7 @@ namespace Lab8Task1
                 for (int j = 0; j < n; j++)
                 {
 
-                    A[i, j] = double.Parse(Console.ReadLine());
+                    A[i, j] = Double.Parse(Console.ReadLine());
                 }
             }
             Console.WriteLine("Your matrix A:\n");
@@ -75,7 +76,7 @@ namespace Lab8Task1
             }
             if (IsDiagonaleDominate(A, n))
             {
-                Console.WriteLine("The condition of diagonal dominance is fulfilled.\nCalculating matrix C and vector D:\n");
+                Console.WriteLine("The condition of diagonal dominance is fulfilled.\nCalculating matrix C:\n");
                 C = FormMatrixC(A, n);
                 D = FormVectorD(A, B);
                 for (int i = 0; i < n; i++)
@@ -83,11 +84,11 @@ namespace Lab8Task1
                     for (int j = 0; j < n; j++)
                     {
                         Console.Write(A[i,j]);
-                        Console.WriteLine("  ");
+                        Console.Write('\t');
                     }
                     Console.Write('\n');
                 }
-                Console.Write('D');
+                Console.WriteLine("vector D:\n");
                 for (int i = 0; i < D.Length;i++)
                 {
                     Console.Write(D[i]);
@@ -97,7 +98,7 @@ namespace Lab8Task1
                 for (int i = 0; i < Xk1.Length;i++)
                 {
                     Console.Write(Xk1[i]);
-                    Console.Write(' ');
+                    Console.Write(' ');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
                 }
             }
             else 
