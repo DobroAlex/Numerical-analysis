@@ -61,7 +61,8 @@ namespace Lab8Task1
             {
                 for (int j = 0; j < n; j++)
                 {
-                    Console.WriteLine(A[i, j]+" ");
+                    Console.Write(A[i, j]+" ");
+                    
 
                 }
                 Console.Write("\n");
