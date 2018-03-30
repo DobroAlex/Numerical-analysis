@@ -1,4 +1,6 @@
-﻿using System;
+/*Теоретическое обоснование:
+https://math.semestr.ru/optim/dichotomy.php */
+using System;
 
 namespace Lab10Task1
 {
