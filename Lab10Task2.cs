@@ -53,41 +53,20 @@ namespace Lab10Task2
 
         public static double f(double x, double p)/*сама ф-ция*/
         {
-            if (IsBadNumber(x))
-            {
-                MASSIVE_FAGGOT_EXCEPTION_SITUATION();
-            }
+
             return Math.Cos(x) - p * x;
         }
         public static double df(double x, double p)/*первая производная*/
         {
-            if(IsBadNumber(x))
-            {
-                MASSIVE_FAGGOT_EXCEPTION_SITUATION();
-            }
+
             return -p - Math.Sin(x);
         }
         public static double df2(double x, double p)/*Вторая производная*/
         {
-            if (IsBadNumber(x))
-            {
-                MASSIVE_FAGGOT_EXCEPTION_SITUATION();
-            }
+
             return -Math.Cos(x);
         }
-        public static bool IsBadNumber(double num) 
-        {
-            if (num.Equals(double.NaN) || num.Equals(double.NegativeInfinity) || num.Equals(double.PositiveInfinity))
-            {
-                return true;
-            }
-            return false;
-        }
-        public static void  MASSIVE_FAGGOT_EXCEPTION_SITUATION()
-        {
-            Int16 U_ARE_MASSIVE_FAG = -228;
-            Console.WriteLine(@"Some bad stuff aka sin\cos(nan\inf) or Log(negative number) occured. Aborting");
-            Environment.Exit(U_ARE_MASSIVE_FAG);
-        }
+
+
     }
 }
