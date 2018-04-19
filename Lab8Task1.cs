@@ -1,4 +1,4 @@
-﻿using System; 
+﻿using System;
 using System.Diagnostics;
 using System.Threading;
 
@@ -27,20 +27,10 @@ namespace Lab8Task1
                 Console.WriteLine("\nSize or accuracy is  null");
                 Environment.Exit(-1);
             }
-            catch (FormatException)
+            catch (Exception ex)
             {
-                Console.WriteLine("\nWrong input format");
-                Environment.Exit(-2);
-            }
-            catch (OverflowException)
-            {
-                Console.WriteLine("\nValue is TOO big (Like my dick ;-])");
-                Environment.Exit(-3);
-            }
-            catch (ArgumentException)
-            {
-                Console.WriteLine("size or accuracy  can't be  <= 0");
-                Environment.Exit(-4);
+                Console.WriteLine(ex.Message+"Aborting");
+                Environment.Exit(-1);
             }
             double[,] A = new double[n, n];
             double[] B = new double[n];
@@ -52,8 +42,15 @@ namespace Lab8Task1
             {
                 for (int j = 0; j < n; j++)
                 {
-
-                    A[i, j] = Double.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+                    try
+                    {
+                        A[i, j] = Double.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message + "Aborting");
+                        Environment.Exit(-1);
+                    }
                 }
             }
             Console.WriteLine("Your matrix A:\n");
@@ -61,8 +58,8 @@ namespace Lab8Task1
             {
                 for (int j = 0; j < n; j++)
                 {
-                    Console.Write(A[i, j]+" ");
-                    
+                    Console.Write(A[i, j] + " ");
+
 
                 }
                 Console.Write("\n");
@@ -70,12 +67,20 @@ namespace Lab8Task1
             Console.WriteLine("\nInput vector (right) B:\n");
             for (int i = 0; i < B.Length; i++)
             {
-                B[i] = Double.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+                try
+                {
+                    B[i] = Double.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message + "Aborting");
+                    Environment.Exit(-1);
+                }
             }
             Console.WriteLine("\nYour vector B:\n");
             for (int i = 0; i < B.Length; i++)
             {
-                Console.WriteLine(B[i]+"\n");
+                Console.WriteLine(B[i] + "\n");
             }
             if (IsDiagonaleDominate(A, n))
             {
@@ -86,38 +91,38 @@ namespace Lab8Task1
                 {
                     for (int j = 0; j < n; j++)
                     {
-                        Console.Write(C[i,j]);
+                        Console.Write(C[i, j]);
                         Console.Write(' ');
                     }
                     Console.Write("\n");
                 }
                 Console.WriteLine("vector D:\n");
-                for (int i = 0; i < D.Length;i++)
+                for (int i = 0; i < D.Length; i++)
                 {
-                    Console.WriteLine(D[i]+"\n");
+                    Console.WriteLine(D[i] + "\n");
 
                 }
                 Xk1 = SimpleIteration(C, D, EPS);
-                for (int i = 0; i < Xk1.Length;i++)
+                for (int i = 0; i < Xk1.Length; i++)
                 {
-                    Console.WriteLine(Xk1[i]+"\n");                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+                    Console.WriteLine(Xk1[i] + "\n");
                 }
             }
-            else 
+            else
             {
                 Console.WriteLine("The condition of diagonal dominance is NOT fulfilled, Aborting");
             }
         }
-        public  static double [] SimpleIteration (double [,] c, double [] d,  double eps)
+        public static double[] SimpleIteration(double[,] c, double[] d, double eps)
         {
             double[] xk = new double[d.Length];
             xk[d.Length - 1] = 1.0;
             double[] xk1 = new double[d.Length];
-            xk1 = VertSum(FormSomeRealShit(c, xk ), d);
+            xk1 = VertSum(FormSomeRealShit(c, xk), d);
             int iters = 1;
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            while (Norma(xk1,xk) > eps)
+            while (Norma(xk1, xk) > eps)
             {
                 xk = xk1;
                 xk1 = VertSum(FormSomeRealShit(c, xk), d);
@@ -191,13 +196,13 @@ namespace Lab8Task1
         public static double[] FormVectorD(double[,] A, double[] b)
         {
             double[] v = new double[b.Length];
-            for (int i = 0; i < b.Length;i++)
+            for (int i = 0; i < b.Length; i++)
             {
                 v[i] = b[i] / A[i, i]; //эл-ты с главной диагонали м-цы 
             }
             return v;
         }
-        public static double [  ] FormSomeRealShit(double [,] A, double [] b) //mumnogv в оригинальных сырцах. Пока не улавливаю
+        public static double[] FormSomeRealShit(double[,] A, double[] b) //mumnogv в оригинальных сырцах. Пока не улавливаю
         {
             double[] c = new double[b.Length];
             for (int i = 0; i < b.Length; i++)
@@ -212,4 +217,3 @@ namespace Lab8Task1
         }
     }
 }
-
