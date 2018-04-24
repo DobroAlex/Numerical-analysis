@@ -80,7 +80,7 @@ namespace Lab8Task1
             Console.WriteLine("\nYour vector B:\n");
             for (int i = 0; i < B.Length; i++)
             {
-                Console.WriteLine(B[i] + "\n");
+                Console.WriteLine(B[i]);
             }
             if (IsDiagonaleDominate(A, n))
             {
