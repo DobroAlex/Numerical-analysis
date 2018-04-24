@@ -42,7 +42,7 @@ double   NumMet::normExp(double x) {
 		}
 	}
 	else {
-		return  NumMet::normExp(abs(x));
+		return  NumMet::normExp(1.0/abs(x));
 	}
 	return exp;
 }
